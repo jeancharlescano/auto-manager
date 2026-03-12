@@ -21,7 +21,10 @@ export default function CarDetail() {
 				<div className="w-1/4">
 					<Spec />
 				</div>
-				<div className="w-3/4 h-auto px-4">
+				<div className="w-3/4 h-auto pl-4 self-end ">
+					<Link href="/car-details/add-maintenance" className="h-12 w-full bg-blue-950 rounded-xl flex items-center justify-center mb-8 cursor-pointer hover:scale-101 transition">
+						<Icon icon="ic:baseline-plus" width={48} height={48} color="white"></Icon>
+					</Link>
 					<MaintenanceCard />
 					<MaintenanceCard />
 					<MaintenanceCard />

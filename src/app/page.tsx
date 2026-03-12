@@ -5,10 +5,10 @@ export default function Home() {
 	return (
 		<div className=" min-h-screen bg-background font-sans max-w-screen">
 			<main className="p-8 grid xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-x-8 gap-y-8 h-auto">
-				<Link href="/car-detail">
+				<Link href="/car-details">
 					<Card />
 				</Link>
-				<Link href="/car-detail">
+				<Link href="/car-details">
 					<Card />
 				</Link>
 				<Link
