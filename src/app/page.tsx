@@ -13,7 +13,7 @@ export default function Home() {
 				</Link>
 				<Link
 					href="/add-vehicule"
-					className="h-72 border-2 border-dashed rounded flex flex-col items-center justify-center cursor-pointer transition hover:scale-105 bg-gray-100/90 border-gray-300"
+					className="h-72 border-2 border-dashed rounded flex flex-col items-center justify-center cursor-pointer transition hover:scale-105 bg-secBackground border-gray-300"
 				>
 					<h4 className="text-xl">Nouveau Vehicule</h4>
 					<p className="text-sm text-gray-300">
