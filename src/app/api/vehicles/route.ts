@@ -44,6 +44,7 @@ export const POST = async (request: Request) => {
 		const session = sessionOrResponse;
 
 		const body = await request.json();
+		console.log("🚀 ~ POST ~ body:", body)
 		const newCar = await prisma.car.create({
 			data: {
 				license_plate: body.licensePlate,

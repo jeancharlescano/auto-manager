@@ -1,6 +1,75 @@
+"use client";
 import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 
 export default function AddVehicule() {
+	const router = useRouter();
+
+	const [plate, setPlate] = useState("");
+
+	const brand = useRef<HTMLInputElement>(null);
+	const model = useRef<HTMLInputElement>(null);
+	const year = useRef<HTMLInputElement>(null);
+	const motorization = useRef<HTMLInputElement>(null);
+	const fuel = useRef<HTMLInputElement>(null);
+	const dinPower = useRef<HTMLInputElement>(null);
+	const power = useRef<HTMLInputElement>(null);
+	const tires = useRef<HTMLInputElement>(null);
+	const color = useRef<HTMLInputElement>(null);
+	const design = useRef<HTMLInputElement>(null);
+	const mileage = useRef<HTMLInputElement>(null);
+
+	const handleAddDash = (value: string) => {
+		let cleaned = value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+
+		if (cleaned.length > 2 && cleaned.length <= 5) {
+			cleaned = cleaned.slice(0, 2) + "-" + cleaned.slice(2);
+		} else if (cleaned.length > 5) {
+			cleaned =
+				cleaned.slice(0, 2) +
+				"-" +
+				cleaned.slice(2, 5) +
+				"-" +
+				cleaned.slice(5, 7);
+		}
+
+		setPlate(cleaned);
+	};
+
+	const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const result = await fetch("/api/vehicles", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				licensePlate: plate,
+				brand: brand.current?.value,
+				model: model.current?.value,
+				year: Number(year.current?.value),
+				engine: motorization.current?.value,
+				fuelType: fuel.current?.value,
+				powerDin: Number(dinPower.current?.value),
+				powerFiscal: Number(power.current?.value),
+				tireSize: tires.current?.value,
+				color: color.current?.value,
+				design: design.current?.value,
+				mileage: Number(mileage.current?.value),
+			}),
+		});
+		const data = await result.json();
+		console.log(data);
+
+		if (result?.ok) {
+			router.push("/");
+		} else {
+			alert("Erreur lors de la création de la voiture");
+		}
+	};
+
 	return (
 		<div className="w-full h-[calc(100vh-64px)]  px-125 flex items-center justify-center">
 			{/* Cadre */}
@@ -13,11 +82,15 @@ export default function AddVehicule() {
 					</h2>
 					<div className="h-px bg-foreground w-1/3"></div>
 				</div>
-				<form className="flex flex-col flex-1 bg-red-300 text-foreground font-medium ">
+				<form
+					className="flex flex-col flex-1 text-foreground font-medium "
+					onSubmit={handleSubmit}
+				>
 					<div className="flex w-full h-full">
 						{/* formulaire */}
 						<aside className="w-1/2 flex border-r">
 							<aside className="w-1/2 flex flex-col justify-between items-start ">
+								<label className="text-foreground">Immatriculation :</label>
 								<label className="text-foreground">Marque :</label>
 								<label className="text-foreground">Modèle :</label>
 								<label className="text-foreground">Année :</label>
@@ -34,7 +107,17 @@ export default function AddVehicule() {
 								{/* Marque */}
 								<input
 									type="text"
+									placeholder="Saissiez votre immatriculation"
+									onChange={(e) => handleAddDash(e.target.value)}
+									value={plate}
+									required
+									maxLength={9}
+									className="border rounded px-2 py w-5/6"
+								/>
+								<input
+									type="text"
 									placeholder="Selectionner la marque"
+									ref={brand}
 									required
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -43,6 +126,7 @@ export default function AddVehicule() {
 								<input
 									type="text"
 									required
+									ref={model}
 									placeholder="Selectionner le modèle"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -51,6 +135,7 @@ export default function AddVehicule() {
 
 								<input
 									type="number"
+									ref={year}
 									placeholder="Selectionner l'année"
 									className="border rounded px-2 py w-5/6"
 									required
@@ -60,6 +145,7 @@ export default function AddVehicule() {
 
 								<input
 									type="text"
+									ref={motorization}
 									placeholder="Selectionner la motorisation"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -68,6 +154,7 @@ export default function AddVehicule() {
 
 								<input
 									type="text"
+									ref={fuel}
 									placeholder="Selectionner la "
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -76,6 +163,7 @@ export default function AddVehicule() {
 
 								<input
 									type="number"
+									ref={dinPower}
 									placeholder="Puissance DIN (ch)"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -83,6 +171,7 @@ export default function AddVehicule() {
 
 								<input
 									type="number"
+									ref={power}
 									placeholder="Puissance (ch)"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -91,6 +180,7 @@ export default function AddVehicule() {
 
 								<input
 									type="text"
+									ref={tires}
 									placeholder="Ex: 205/55 R16"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -99,6 +189,7 @@ export default function AddVehicule() {
 
 								<input
 									type="text"
+									ref={color}
 									placeholder="Selectionner la couleur"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -107,6 +198,7 @@ export default function AddVehicule() {
 
 								<input
 									type="text"
+									ref={design}
 									placeholder="Selectionner le Design"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -115,6 +207,7 @@ export default function AddVehicule() {
 
 								<input
 									type="number"
+									ref={mileage}
 									placeholder="Kilométrage (km)"
 									className="border rounded px-2 py w-5/6"
 								/>

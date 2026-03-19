@@ -10,11 +10,11 @@ import { requireAuth } from "@/lib/auth";
 export default async function CarDetail({
 	params,
 }: {
-	params: { id: string };
+	params: { license_plate: string };
 }) {
 
 	const sessionOrResponse = await requireAuth();
-	const { id } = await params;
+	const { license_plate } = await params;
 
 	if (sessionOrResponse instanceof Response) {
 		return sessionOrResponse;
@@ -24,7 +24,7 @@ export default async function CarDetail({
 
 	const carData = await prisma.car.findFirst({
 		where: {
-			id: Number(id),
+			license_plate: license_plate,
 			user_id: Number(session.user.id),
 		},
 		include: {
@@ -43,6 +43,7 @@ export default async function CarDetail({
 			},
 		},
 	});
+	console.log("🚀 ~ CarDetail ~ carData:", carData)
 	if (!carData) return <>error</>;
 	
 	return (

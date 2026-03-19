@@ -2,9 +2,11 @@
 import { Icon } from "@iconify/react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
 export default function Login() {
+	const router = useRouter()
 	const [displayPwd, setdisplayPwd] = useState(false);
 	const email = useRef<HTMLInputElement>(null);
 	const password = useRef<HTMLInputElement>(null);
@@ -21,7 +23,7 @@ export default function Login() {
 		console.log(res);
 
 		if (res?.ok) {
-			window.location.href = "/";
+			router.push("/")
 		} else {
 			alert("Login failed");
 		}
