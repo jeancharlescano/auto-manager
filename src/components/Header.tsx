@@ -45,7 +45,11 @@ export default function Header() {
 						<div
 							className="w-12 h-12 cursor-pointer hover:scale-105 transition-all bg-secBackground rounded-full flex items-center justify-center
 							"
-						><span className="text-foreground text-xl">{session.user.name?.charAt(0)}</span></div>
+						>
+							<span className="text-foreground text-xl">
+								{session.user.firstname?.charAt(0).toUpperCase()}
+							</span>
+						</div>
 					</Link>
 				) : (
 					<Link href="/login">
