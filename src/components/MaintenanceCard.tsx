@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 
 export default function MaintenanceCard() {
 	return (
-		<div className="h-auto rounded-lg shadow-xl p-2 mb-20 bg-secBackground">
+		<div className="h-auto rounded-lg shadow-xl p-2 mb-10 bg-secBackground">
 			<div className="flex items-center justify-between mb-2">
 				<h2 className="font-bold text-xl">Revision</h2>
 				<div className="flex items-center">
