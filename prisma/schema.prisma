@@ -63,7 +63,7 @@ model maintenance {
 
 model part {
   id                Int                @id @default(autoincrement())
-  name              String             @db.VarChar(255)
+  name              String             @unique @db.VarChar(255)
   reference         String?            @db.VarChar(255)
   created_at        DateTime?          @default(now()) @db.Timestamp(6)
   maintenance_parts maintenance_part[]
