@@ -1,7 +1,7 @@
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export const GET = async (request: Request) => {
+export const GET = async (_request: Request) => {
 	try {
 		const sessionOrResponse = await requireAuth();
 		if (sessionOrResponse instanceof Response) {
@@ -44,7 +44,7 @@ export const POST = async (request: Request) => {
 		const session = sessionOrResponse;
 
 		const body = await request.json();
-		console.log("🚀 ~ POST ~ body:", body)
+		console.log("🚀 ~ POST ~ body:", body);
 		const newCar = await prisma.car.create({
 			data: {
 				license_plate: body.licensePlate,
@@ -64,7 +64,7 @@ export const POST = async (request: Request) => {
 		});
 		return new Response(JSON.stringify(newCar), {
 			status: 201,
-			headers: { "Content-type": "application.json" },
+			headers: { "Content-type": "application/json" },
 		});
 	} catch (error) {
 		console.error("🚀 ~ POST ~ error:", error);

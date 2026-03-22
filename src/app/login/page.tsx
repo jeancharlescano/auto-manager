@@ -2,11 +2,12 @@
 import { Icon } from "@iconify/react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 import { useRef, useState } from "react";
 
 export default function Login() {
-	const router = useRouter()
+	const router = useRouter();
 	const [displayPwd, setdisplayPwd] = useState(false);
 	const email = useRef<HTMLInputElement>(null);
 	const password = useRef<HTMLInputElement>(null);
@@ -23,7 +24,7 @@ export default function Login() {
 		console.log(res);
 
 		if (res?.ok) {
-			router.push("/")
+			router.push("/");
 		} else {
 			alert("Login failed");
 		}
@@ -67,8 +68,10 @@ export default function Login() {
 						Se connecter
 					</button>
 				</form>
-				<div className="bg-background h-px w-3/4 mb-4"/>
-				<Link href="/register" className="text-sm underline">pas de compte ? crée en un</Link>
+				<div className="bg-background h-px w-3/4 mb-4" />
+				<Link href="/register" className="text-sm underline">
+					pas de compte ? crée en un
+				</Link>
 			</div>
 		</div>
 	);

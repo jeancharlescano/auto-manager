@@ -1,23 +1,72 @@
 "use client";
+import { part } from "@/generated/prisma/client";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState, useEffect } from "react";
 
-export default function addMaintenance() {
-	const [pieces, setPieces] = useState([{ name: "", quantity: 1 }]);
+export default function AddMaintenancee({
+	licensePlate,
+}: {
+	licensePlate: string;
+}) {
+	const router = useRouter();
+	const [partList, setPartList] = useState<part[]>([]);
+	const [pieces, setPieces] = useState<MaintenancePartForm[]>([]);
+	const title = useRef<HTMLInputElement>(null);
+	const date = useRef<HTMLInputElement>(null);
+	const mileage = useRef<HTMLInputElement>(null);
+	const totalPrice = useRef<HTMLInputElement>(null);
 
 	const addPiece = () => {
-		setPieces([...pieces, { name: "", quantity: 1 }]);
+		setPieces([...pieces, { name: "", quantity: 1, price: 0 }]);
 	};
 
-	const updatePiece = (index, field, value) => {
+	const updatePiece = <K extends keyof MaintenancePartForm>(
+		index: number,
+		field: K,
+		value: MaintenancePartForm[K],
+	) => {
 		const updated = [...pieces];
 		updated[index][field] = value;
 		setPieces(updated);
 	};
 
-	const removePiece = (index) => {
+	const removePiece = (index: number) => {
 		setPieces(pieces.filter((_, i) => i !== index));
 	};
+
+	const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const payload = {
+			title: title.current?.value,
+			date: date.current?.value,
+			mileage: mileage.current?.value,
+			totalPrice: totalPrice.current?.value,
+			parts: pieces,
+		};
+
+		const res = await fetch(`/api/vehicles/${licensePlate}/maintenance`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(payload),
+		});
+
+		if (res.ok) {
+			router.back();
+		}
+	};
+
+	useEffect(() => {
+		const getPartsList = async () => {
+			const result = await fetch("/api/parts");
+			const data = await result.json();
+			setPartList(data);
+		};
+		getPartsList();
+	}, []);
 
 	return (
 		<div className="w-full h-[calc(100vh-64px)]  px-125 flex items-center justify-center">
@@ -31,7 +80,10 @@ export default function addMaintenance() {
 					</h2>
 					<div className="h-px bg-background w-1/3" />
 				</div>
-				<form className="flex flex-1 flex-col text-foreground font-medium px-4 ">
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-1 flex-col text-foreground font-medium px-4 "
+				>
 					<div className="flex mb-4">
 						<label className="w-1/4 font-semibold">
 							Titre de la Maintenance :
@@ -39,6 +91,7 @@ export default function addMaintenance() {
 						<input
 							className="w-3/4 border px-2 py rounded"
 							placeholder="Ex: Révision"
+							ref={title}
 							type="text"
 						/>
 					</div>
@@ -49,6 +102,7 @@ export default function addMaintenance() {
 								<Icon icon="mdi:calendar" className=" text-xl" />
 								<input
 									type="date"
+									ref={date}
 									placeholder="Selectionner une date"
 									className="w-full outline-none "
 								/>
@@ -60,6 +114,7 @@ export default function addMaintenance() {
 								/>
 								<input
 									type="number"
+									ref={mileage}
 									placeholder="Kilométrage"
 									className="w-full outline-none "
 								/>
@@ -68,6 +123,7 @@ export default function addMaintenance() {
 								<Icon icon="material-symbols:euro" className=" text-xl" />
 								<input
 									type="number"
+									ref={totalPrice}
 									placeholder="Coût total"
 									className="w-full outline-none "
 								/>
@@ -95,24 +151,47 @@ export default function addMaintenance() {
 										{/* piece name */}
 										<input
 											type="text"
+											list="partsList"
 											placeholder="Nom de la pièce"
 											value={piece.name}
 											onChange={(e) =>
 												updatePiece(index, "name", e.target.value)
 											}
-											className="w-2/3 outline-none"
+											className="w-1/4 outline-none border border-secBackground rounded px-2"
 										/>
+										<datalist id="partsList">
+											{partList.map((part) => {
+												return <option key={part.id} value={part.name} />;
+											})}
+										</datalist>
 
 										{/* quantity */}
-										<input
-											type="number"
-											min="1"
-											value={piece.quantity}
-											onChange={(e) =>
-												updatePiece(index, "quantity", e.target.value)
-											}
-											className="w-17 border border-secBackground rounded px-2"
-										/>
+										<div>
+											<input
+												type="number"
+												min="1"
+												value={piece.quantity}
+												onChange={(e) =>
+													updatePiece(index, "quantity", Number(e.target.value))
+												}
+												className="w-17 border border-secBackground rounded px-2"
+											/>
+											<span> Qte</span>
+										</div>
+
+										{/* price */}
+										<div>
+											<input
+												type="number"
+												min="1"
+												value={piece.price}
+												onChange={(e) =>
+													updatePiece(index, "price", Number(e.target.value))
+												}
+												className="w-17 border border-secBackground rounded px-2"
+											/>
+											<span> €</span>
+										</div>
 
 										{/* delete */}
 										<button

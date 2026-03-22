@@ -12,7 +12,6 @@ export default async function CarDetail({
 }: {
 	params: { license_plate: string };
 }) {
-
 	const sessionOrResponse = await requireAuth();
 	const { license_plate } = await params;
 
@@ -43,9 +42,8 @@ export default async function CarDetail({
 			},
 		},
 	});
-	console.log("🚀 ~ CarDetail ~ carData:", carData)
 	if (!carData) return <>error</>;
-	
+
 	return (
 		<main className="px-120 h-full w-full">
 			<Link href="/" className="mt-4 ml-2 absolute left-0">
@@ -74,7 +72,7 @@ export default async function CarDetail({
 				</div>
 				<div className="w-3/4 h-auto pl-4 self-end ">
 					<Link
-						href="/car-details/add-maintenance"
+						href={`/car-details/${license_plate}/add-maintenance`}
 						className="h-12 w-full bg-blue-950 rounded-xl flex items-center justify-center mb-8 cursor-pointer hover:scale-101 transition"
 					>
 						<Icon
