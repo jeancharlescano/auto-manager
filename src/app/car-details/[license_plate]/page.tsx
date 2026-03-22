@@ -82,10 +82,14 @@ export default async function CarDetail({
 							color="white"
 						></Icon>
 					</Link>
-					<MaintenanceCard />
-					<MaintenanceCard />
-					<MaintenanceCard />
-					<MaintenanceCard />
+					{carData.maintenances.map((maintenance) => {
+						return (
+							<MaintenanceCard
+								key={maintenance.id}
+								maintenanceData={maintenance}
+							/>
+						);
+					})}
 				</div>
 			</div>
 		</main>

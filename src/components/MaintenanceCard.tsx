@@ -1,10 +1,16 @@
+import { maintenance } from "@/generated/prisma/client";
 import { Icon } from "@iconify/react";
+import { MaintenanceData } from "../types/maintenance";
 
-export default function MaintenanceCard() {
+export default function MaintenanceCard({
+	maintenanceData,
+}: {
+	maintenanceData: MaintenanceData;
+}) {
 	return (
 		<div className="h-auto rounded-lg shadow-xl p-2 mb-10 bg-secBackground">
 			<div className="flex items-center justify-between mb-2">
-				<h2 className="font-bold text-xl">Revision</h2>
+				<h2 className="font-bold text-xl">{maintenanceData.title}</h2>
 				<div className="flex items-center">
 					<Icon
 						icon="mdi:calendar"
@@ -12,7 +18,7 @@ export default function MaintenanceCard() {
 						height={24}
 						className="text-gray-400"
 					/>
-					<p>12/02/2025</p>
+					<p>{maintenanceData.maintenance_date.toLocaleDateString("fr-FR")}</p>
 				</div>
 			</div>
 			<div className="flex items-center justify-between mb-2">
@@ -23,19 +29,26 @@ export default function MaintenanceCard() {
 						height={24}
 						className="text-gray-400"
 					/>
-					<p className="font text-md">120 000 km</p>
+					<p className="font text-md">{maintenanceData.mileage_at_time} km</p>
 				</div>
-				<p>15 000 €</p>
+				<p>{Number(maintenanceData.total_cost)} €</p>
 			</div>
-			<ul className="px-8 overflow-auto max-h-40 mb-2">
-				<li>Toto</li>
-				<li>Toto</li>
-				<li>Toto</li>
-				<li>Toto</li>
-				<li>Toto</li>
-				<li>Toto</li>
-				<li>Toto</li>
-				<li>Toto</li>
+			<ul className="px-8 overflow-auto max-h-40 mb-2 bg-background rounded">
+				{maintenanceData.maintenance_parts.map((maintenancePart) => {
+					return (
+						<li key={maintenancePart.part_id}>
+							<div className="flex w-full">
+								<p className="w-1/3">{maintenancePart.parts.name}</p>
+								<p className="w-1/3 text-center">
+									{maintenancePart.quantity} pce
+								</p>
+								<p className="w-1/3 text-right">
+									{Number(maintenancePart.unit_price)} €
+								</p>
+							</div>
+						</li>
+					);
+				})}
 			</ul>
 			<div className="w-full flex justify-end px-2">
 				<div className="flex flex-col items-center cursor-pointer rounded">

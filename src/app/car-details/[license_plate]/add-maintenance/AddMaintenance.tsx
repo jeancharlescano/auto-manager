@@ -1,5 +1,6 @@
 "use client";
 import { part } from "@/generated/prisma/client";
+import { MaintenancePartForm } from "@/types/maintenance";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
