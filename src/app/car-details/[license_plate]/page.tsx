@@ -47,7 +47,7 @@ export default async function CarDetail({
 	return (
 		<main className="px-120 h-full w-full">
 			<Link href="/" className="mt-4 ml-2 absolute left-0">
-				<Icon icon="left-circle-arrow" />
+				<Icon icon="left-circle-arrow" color="white" />
 			</Link>
 			<div className="w-full h-110 overflow-hidden mb-8">
 				<Image

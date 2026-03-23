@@ -5,8 +5,11 @@ import { useRef, useState } from "react";
 
 export default function AddVehicule() {
 	const router = useRouter();
-
+	console.log(process.env.NEXT_PUBLIC_FILERAPIURL);
 	const [plate, setPlate] = useState("");
+	const [file, setFile] = useState<File | null>(null);
+	const [preview, setPreview] = useState<string | null>(null);
+	const inputRef = useRef<HTMLInputElement | null>(null);
 
 	const brand = useRef<HTMLInputElement>(null);
 	const model = useRef<HTMLInputElement>(null);
@@ -37,10 +40,49 @@ export default function AddVehicule() {
 		setPlate(cleaned);
 	};
 
+	const handleFiles = (file: File) => {
+		setFile(file);
+
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			setPreview(reader.result as string);
+		};
+		reader.readAsDataURL(file);
+	};
+
+	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+			handleFiles(e.dataTransfer.files[0]);
+		}
+	};
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			handleFiles(e.target.files[0]);
+		}
+	};
+
 	const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const result = await fetch("/api/vehicles", {
+		if (!file) return;
+
+		const formData = new FormData();
+		formData.append("image", file);
+
+		let response = await fetch(
+			`${process.env.NEXT_PUBLIC_FILERAPIURL}/api/upload`,
+			{
+				method: "POST",
+				body: formData,
+			},
+		);
+
+		let data = await response.json();
+		let imageUrl = data.files[0].url;
+
+		response = await fetch("/api/vehicles", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -58,12 +100,13 @@ export default function AddVehicule() {
 				color: color.current?.value,
 				design: design.current?.value,
 				mileage: Number(mileage.current?.value),
+				pictureUrl: imageUrl,
 			}),
 		});
-		const data = await result.json();
+		data = await response.json();
 		console.log(data);
 
-		if (result?.ok) {
+		if (response?.ok) {
 			router.push("/");
 		} else {
 			alert("Erreur lors de la création de la voiture");
@@ -216,15 +259,43 @@ export default function AddVehicule() {
 
 						{/* image */}
 						<aside className="w-1/2  pl-21 border-l">
-							<div className="w-full border border-dashed hover:bg-background h-full flex justify-center items-center rounded ">
-								<div className="flex flex-col w-3/4 items-center ">
-									<Icon icon="mdi:camera" width={64} height={64} />
-									<h3 className="text-xl font-bold">Glissez une photo ici</h3>
-									<span className="text-md">ou</span>
-									<button className="rounded text-white py-1 px-4 bg-blue-950 cursor-pointer shadow hover:bg-blue-800 font-semibold">
-										Télécharger une image
-									</button>
-								</div>
+							<div
+								onDragOver={(e) => e.preventDefault()}
+								onDrop={handleDrop}
+								onClick={() => inputRef.current?.click()}
+								className="w-full border border-dashed hover:bg-background h-full flex justify-center items-center rounded cursor-pointer"
+							>
+								{preview ? (
+									<>
+										<img
+											src={preview}
+											alt="preview"
+											className="max-h-full max-w-full object-contain rounded"
+										/>
+										<input
+											ref={inputRef}
+											type="file"
+											accept="image/*"
+											onChange={handleChange}
+											className="hidden"
+										/>
+									</>
+								) : (
+									<div className="flex flex-col w-3/4 items-center">
+										<Icon icon="mdi:camera" width={64} height={64} />
+										<h3 className="text-xl font-bold">Glissez une photo ici</h3>
+										<span className="text-md">ou</span>
+										<h3 className="text-xl font-bold">Cliquez</h3>
+
+										<input
+											ref={inputRef}
+											type="file"
+											accept="image/*"
+											onChange={handleChange}
+											className="hidden"
+										/>
+									</div>
+								)}
 							</div>
 						</aside>
 					</div>
