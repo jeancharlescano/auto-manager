@@ -50,8 +50,12 @@ export default async function CarDetail({
 				<Icon icon="left-circle-arrow" color="white" />
 			</Link>
 			<div className="w-full h-110 overflow-hidden mb-8">
-				<Image
-					src={carImg}
+				<img
+					src={
+						carData.picture_url
+							? `${process.env.NEXT_PUBLIC_FILERAPIURL}${carData.picture_url}`
+							: carImg.src
+					}
 					alt="car"
 					className="w-full h-full object-contain object-center bg-secBackground rounded-b"
 				/>
