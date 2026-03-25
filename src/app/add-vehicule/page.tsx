@@ -71,18 +71,7 @@ export default function AddVehicule() {
 		const formData = new FormData();
 		formData.append("image", file);
 
-		let response = await fetch(
-			`${process.env.NEXT_PUBLIC_FILERAPIURL}/api/upload`,
-			{
-				method: "POST",
-				body: formData,
-			},
-		);
-
-		let data = await response.json();
-		let imageUrl = data.files[0].url;
-
-		response = await fetch("/api/vehicles", {
+		const response = await fetch("/api/vehicles", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -100,10 +89,10 @@ export default function AddVehicule() {
 				color: color.current?.value,
 				design: design.current?.value,
 				mileage: Number(mileage.current?.value),
-				pictureUrl: imageUrl,
+				pictureFormData: formData,
 			}),
 		});
-		data = await response.json();
+		const data = await response.json();
 		console.log(data);
 
 		if (response?.ok) {

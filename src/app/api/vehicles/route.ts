@@ -32,10 +32,10 @@ export const GET = async (_request: Request) => {
 		);
 	}
 };
+
 export const POST = async (request: Request) => {
 	try {
 		const sessionOrResponse = await requireAuth();
-		console.log("🚀 ~ POST ~ sessionOrResponse:", sessionOrResponse);
 
 		if (sessionOrResponse instanceof Response) {
 			return sessionOrResponse;
@@ -44,6 +44,19 @@ export const POST = async (request: Request) => {
 		const session = sessionOrResponse;
 
 		const body = await request.json();
+
+		
+		let response = await fetch(
+			`${process.env.NEXT_PUBLIC_FILERAPIURL}/api/upload`,
+			{
+				method: "POST",
+				body: body.pictureFormData,
+			},
+		);
+
+		let data = await response.json();
+		let imageUrl = data.files[0].url;
+
 		const newCar = await prisma.car.create({
 			data: {
 				license_plate: body.licensePlate,
@@ -59,7 +72,7 @@ export const POST = async (request: Request) => {
 				tire_size: body.tireSize,
 				color: body.color,
 				design: body.design,
-				picture_url: body.pictureUrl,
+				picture_url: imageUrl,
 			},
 		});
 		return new Response(JSON.stringify(newCar), {

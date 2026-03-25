@@ -17,14 +17,15 @@ export default function Home() {
 		loadCars();
 	}, []);
 
-	console.log("🚀 ~ Home ~ cars:", cars);
-
 	return (
 		<div className=" min-h-screen bg-background font-sans max-w-screen">
 			<main className="p-8 grid xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-x-8 gap-y-8 h-auto">
 				{cars.map((car) => {
 					return (
-						<Link href={`/car-details/${car.license_plate}`} key={car.license_plate}>
+						<Link
+							href={`/car-details/${car.license_plate}`}
+							key={car.license_plate}
+						>
 							<Card carData={car} />
 						</Link>
 					);
