@@ -53,7 +53,7 @@ export default async function CarDetail({
 				<img
 					src={
 						carData.picture_url
-							? `${process.env.NEXT_PUBLIC_FILERAPIURL}${carData.picture_url}`
+							? `${process.env.NEXT_PUBLIC_CDN_API_URL}${carData.picture_url}`
 							: carImg.src
 					}
 					alt="car"

@@ -4,6 +4,10 @@ import { MaintenancePartForm } from "@/types/maintenance";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
+type FileWithPreview = {
+	file: File;
+	preview: string;
+};
 
 export default function AddMaintenancee({
 	licensePlate,
@@ -17,6 +21,8 @@ export default function AddMaintenancee({
 	const date = useRef<HTMLInputElement>(null);
 	const mileage = useRef<HTMLInputElement>(null);
 	const totalPrice = useRef<HTMLInputElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [files, setFiles] = useState<FileWithPreview[]>([]);
 
 	const addPiece = () => {
 		setPieces([...pieces, { name: "", quantity: 1, price: 0 }]);
@@ -36,23 +42,48 @@ export default function AddMaintenancee({
 		setPieces(pieces.filter((_, i) => i !== index));
 	};
 
+	const handleFiles = (selectedFiles: FileList) => {
+		const newFiles: FileWithPreview[] = Array.from(selectedFiles).map(
+			(file) => {
+				const preview = URL.createObjectURL(file); // création d'une preview temporaire
+				return { file, preview };
+			},
+		);
+		setFiles((prev) => [...prev, ...newFiles]);
+	};
+
+	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+			handleFiles(e.dataTransfer.files);
+		}
+	};
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			handleFiles(e.target.files);
+		}
+	};
 	const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const payload = {
-			title: title.current?.value,
-			date: date.current?.value,
-			mileage: mileage.current?.value,
-			totalPrice: totalPrice.current?.value,
-			parts: pieces,
-		};
+		const formData = new FormData();
+		formData.append("title", title.current?.value || "");
+		formData.append("date", date.current?.value || "");
+		formData.append("mileage", mileage.current?.value || "");
+		formData.append("totalPrice", totalPrice.current?.value || "");
+		formData.append("parts", JSON.stringify(pieces));
+		files.forEach(({ file }) => {
+			if (file.type.split("/")[0] === "image") {
+				formData.append("image", file);
+			} else {
+				formData.append("file", file);
+			}
+		});
 
 		const res = await fetch(`/api/vehicles/${licensePlate}/maintenance`, {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(payload),
+			body: formData,
 		});
 
 		if (res.ok) {
@@ -70,7 +101,7 @@ export default function AddMaintenancee({
 	}, []);
 
 	return (
-		<div className="w-full h-[calc(100vh-64px)]  px-125 flex items-center justify-center">
+		<div className="w-full h-[calc(100vh-64px)]  px-12 flex items-center justify-center">
 			{/* Cadre */}
 			<div className="w-300 h-3/4 bg-secBackground rounded p-4 shadow-2xl flex flex-col">
 				{/* Title */}
@@ -216,14 +247,50 @@ export default function AddMaintenancee({
 							</button>
 						</div>
 
-						<div className="pl-4  flex flex-2 ">
-							<div className="border rounded border-dashed w-full border-foreground hover:bg-background flex flex-col items-center justify-center">
-								<Icon icon="mdi:camera" width={64} height={64} />
-								<h3 className="text-xl font-bold">Glissez une photo ici</h3>
-								<span className="text-md">ou</span>
-								<button className="rounded text-white py-1 px-4 bg-blue-950 cursor-pointer shadow hover:bg-blue-800 font-semibold">
-									Télécharger une image
-								</button>
+						<div className="pl-4 flex flex-2">
+							<div
+								onDragOver={(e) => e.preventDefault()}
+								onDrop={handleDrop}
+								onClick={() => inputRef.current?.click()}
+								className="border rounded border-dashed w-full border-foreground hover:bg-background flex flex-col items-center justify-center cursor-pointer p-4"
+							>
+								{files.length > 0 ? (
+									<div className="flex flex-col gap-2 w-full">
+										{files.map((f, idx) => (
+											<div
+												key={idx}
+												className="flex items-center gap-2 border p-2 rounded w-full"
+											>
+												<Icon
+													icon={
+														f.file.type.startsWith("image/")
+															? "mdi:image"
+															: "mdi:file-document"
+													}
+													width={24}
+													height={24}
+												/>
+												<span>{f.file.name}</span>
+											</div>
+										))}
+									</div>
+								) : (
+									<div className="flex flex-col items-center">
+										<Icon icon="mdi:file-outline" width={64} height={64} />
+										<h3 className="text-xl font-bold">Glissez vos documents</h3>
+										<span className="text-md">ou</span>
+										<h3 className="text-xl font-bold">Cliquez</h3>
+									</div>
+								)}
+
+								<input
+									ref={inputRef}
+									type="file"
+									accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+									multiple
+									onChange={handleChange}
+									className="hidden"
+								/>
 							</div>
 						</div>
 					</div>

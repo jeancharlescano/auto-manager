@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 
 export default function AddVehicule() {
 	const router = useRouter();
-	console.log(process.env.NEXT_PUBLIC_FILERAPIURL);
 	const [plate, setPlate] = useState("");
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
@@ -69,31 +68,25 @@ export default function AddVehicule() {
 		if (!file) return;
 
 		const formData = new FormData();
+		formData.append("licensePlate", plate);
+		formData.append("brand", brand.current?.value || "");
+		formData.append("model", model.current?.value || "");
+		formData.append("year", year.current?.value || "");
+		formData.append("engine", motorization.current?.value || "");
+		formData.append("fuelType", fuel.current?.value || "");
+		formData.append("powerDin", dinPower.current?.value || "");
+		formData.append("powerFiscal", power.current?.value || "");
+		formData.append("tireSize", tires.current?.value || "");
+		formData.append("color", color.current?.value || "");
+		formData.append("design", design.current?.value || "");
+		formData.append("mileage", mileage.current?.value || "");
 		formData.append("image", file);
 
 		const response = await fetch("/api/vehicles", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				licensePlate: plate,
-				brand: brand.current?.value,
-				model: model.current?.value,
-				year: Number(year.current?.value),
-				engine: motorization.current?.value,
-				fuelType: fuel.current?.value,
-				powerDin: Number(dinPower.current?.value),
-				powerFiscal: Number(power.current?.value),
-				tireSize: tires.current?.value,
-				color: color.current?.value,
-				design: design.current?.value,
-				mileage: Number(mileage.current?.value),
-				pictureFormData: formData,
-			}),
+			body: formData,
 		});
 		const data = await response.json();
-		console.log(data);
 
 		if (response?.ok) {
 			router.push("/");

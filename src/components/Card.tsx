@@ -1,24 +1,15 @@
-import Image from "next/image";
 import carImg from "@/assets/a5.jpg";
 import { car } from "@/generated/prisma/client";
 export default function Card({ carData }: { carData: car }) {
-	console.log("🚀 ~ Card ~ carData:", carData);
-	console.log(
-		"🚀 ~ Card ~ `${process.env.NEXT_PUBLIC_FILERAPIURL}${carData.picture_url}`:",
-		`${process.env.NEXT_PUBLIC_FILERAPIURL}${carData.picture_url}`,
-	);
 	return (
 		<div className="h-72 rounded w-full shadow-xl bg-secBackground overflow-hidden cursor-pointer transition hover:scale-[102%]">
 			<div className="h-2/3 overflow-hidden relative">
-				<Image
+				<img
 					src={
 						carData.picture_url
-							? `${process.env.NEXT_PUBLIC_FILERAPIURL}${carData.picture_url}`
-							: carImg
+							? `${process.env.NEXT_PUBLIC_CDN_API_URL}${carData.picture_url}`
+							: carImg.src
 					}
-					fill
-					loading="eager"
-					alt="car"
 					className="w-full h-full object-cover object-center"
 				/>
 			</div>

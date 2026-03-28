@@ -40,38 +40,42 @@ export const POST = async (request: Request) => {
 		if (sessionOrResponse instanceof Response) {
 			return sessionOrResponse;
 		}
-
 		const session = sessionOrResponse;
-
-		const body = await request.json();
-
 		
-		let response = await fetch(
-			`${process.env.NEXT_PUBLIC_FILERAPIURL}/api/upload`,
+		const formData = await request.formData();
+
+		const file = formData.get("image") as File;
+		const uploadData = new FormData();
+		uploadData.append("image", file);
+		const uploadRes = await fetch(
+			`${process.env.NEXT_PUBLIC_CDN_API_URL}/api/upload`,
 			{
 				method: "POST",
-				body: body.pictureFormData,
+				headers: {
+					Authorization: `Bearer ${process.env.CDN_TOKEN}`,
+				},
+				body: uploadData,
 			},
 		);
 
-		let data = await response.json();
+		const data = await uploadRes.json();
 		let imageUrl = data.files[0].url;
 
 		const newCar = await prisma.car.create({
 			data: {
-				license_plate: body.licensePlate,
+				license_plate: formData.get("licensePlate") as string,
 				user_id: Number(session.user.id),
-				brand: body.brand,
-				model: body.model,
-				year: body.year,
-				engine: body.engine,
-				fuel_type: body.fuelType,
-				horsepower_din: body.powerDin,
-				fiscal_power: body.powerFiscal,
-				mileage: body.mileage,
-				tire_size: body.tireSize,
-				color: body.color,
-				design: body.design,
+				brand: formData.get("brand") as string,
+				model: formData.get("model") as string,
+				year: Number(formData.get("year")),
+				engine: formData.get("engine") as string,
+				fuel_type: formData.get("fuelType") as string,
+				horsepower_din: Number(formData.get("powerDin")),
+				fiscal_power: Number(formData.get("powerFiscal")),
+				mileage: Number(formData.get("mileage")),
+				tire_size: formData.get("tireSize") as string,
+				color: formData.get("color") as string,
+				design: formData.get("design") as string,
 				picture_url: imageUrl,
 			},
 		});
