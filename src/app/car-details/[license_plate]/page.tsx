@@ -1,11 +1,10 @@
-import Image from "next/image";
 import carImg from "@/assets/a5.jpg";
 import Link from "next/link";
 import Spec from "@/components/Spec";
 import { Icon } from "@iconify/react";
-import MaintenanceCard from "@/components/MaintenanceCard";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import MaintenanceList from "@/components/MaintenanceList";
 
 export default async function CarDetail({
 	params,
@@ -45,7 +44,7 @@ export default async function CarDetail({
 	if (!carData) return <>error</>;
 
 	return (
-		<main className="px-120 h-full w-full">
+		<main className="px-124 h-full w-full">
 			<Link href="/" className="mt-4 ml-2 absolute left-0">
 				<Icon icon="left-circle-arrow" color="white" />
 			</Link>
@@ -74,7 +73,7 @@ export default async function CarDetail({
 						year={carData.year}
 					/>
 				</div>
-				<div className="w-3/4 h-auto pl-4 self-end ">
+				<div className="w-3/4 h-auto pl-4 ">
 					<Link
 						href={`/car-details/${license_plate}/add-maintenance`}
 						className="h-12 w-full bg-blue-950 rounded-xl flex items-center justify-center mb-8 cursor-pointer hover:scale-101 transition"
@@ -86,14 +85,9 @@ export default async function CarDetail({
 							color="white"
 						></Icon>
 					</Link>
-					{carData.maintenances.map((maintenance) => {
-						return (
-							<MaintenanceCard
-								key={maintenance.id}
-								maintenanceData={maintenance}
-							/>
-						);
-					})}
+					<MaintenanceList
+						maintenances={JSON.parse(JSON.stringify(carData.maintenances))}
+					/>
 				</div>
 			</div>
 		</main>

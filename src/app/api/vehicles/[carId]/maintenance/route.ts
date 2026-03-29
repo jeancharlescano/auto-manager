@@ -2,7 +2,6 @@ import { Prisma } from "@/generated/prisma/client";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { MaintenancePartForm } from "@/types/maintenance";
-import { connect } from "http2";
 
 export const POST = async (
 	request: Request,
@@ -50,11 +49,10 @@ export const POST = async (
 			},
 		);
 		const data = await uploadRes.json();
-		const urlInvoices = [];
+		const invoices = [];
 		for (const file of data.files) {
-			urlInvoices.push(file.url);
+			invoices.push(file);
 		}
-		console.log("🚀 ~ POST ~ urlInvoices:", urlInvoices);
 
 		const newMaintenance = await prisma.maintenance.create({
 			data: {
@@ -82,8 +80,9 @@ export const POST = async (
 					),
 				},
 				invoices: {
-					create: urlInvoices.map((url: string) => ({
-						file_url: url,
+					create: invoices.map((invoice) => ({
+						file_url: invoice.url,
+						type: invoice.type,
 					})),
 				},
 			},

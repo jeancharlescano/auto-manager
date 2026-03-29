@@ -87,7 +87,7 @@ export default function AddMaintenancee({
 		});
 
 		if (res.ok) {
-			router.back();
+			router.push(`/car-details/${licensePlate}`);
 		}
 	};
 

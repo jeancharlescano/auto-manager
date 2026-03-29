@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
 			{
 				protocol: "http",
 				hostname: "127.0.0.1",
-				port: "3200",
-				pathname: "/preview/image/**",
+				port: "3000",
+				pathname: "/api/preview/image/**",
 			},
 		],
 	},

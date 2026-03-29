@@ -41,7 +41,7 @@ export const POST = async (request: Request) => {
 			return sessionOrResponse;
 		}
 		const session = sessionOrResponse;
-		
+
 		const formData = await request.formData();
 
 		const file = formData.get("image") as File;
@@ -59,7 +59,6 @@ export const POST = async (request: Request) => {
 		);
 
 		const data = await uploadRes.json();
-		let imageUrl = data.files[0].url;
 
 		const newCar = await prisma.car.create({
 			data: {
@@ -76,7 +75,8 @@ export const POST = async (request: Request) => {
 				tire_size: formData.get("tireSize") as string,
 				color: formData.get("color") as string,
 				design: formData.get("design") as string,
-				picture_url: imageUrl,
+				picture_url: data.files[0].url,
+				picture_type: data.files[0].type,
 			},
 		});
 		return new Response(JSON.stringify(newCar), {
