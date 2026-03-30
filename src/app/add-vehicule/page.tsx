@@ -1,15 +1,19 @@
 "use client";
+import { car } from "@/generated/prisma/client";
 import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 export default function AddVehicule() {
 	const router = useRouter();
+	const searchParam = useSearchParams();
+	const license_plate = searchParam.get("license_plate");
 	const [plate, setPlate] = useState("");
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
-	const inputRef = useRef<HTMLInputElement | null>(null);
+	const [car, setCar] = useState<car | null>(null);
 
+	const inputRef = useRef<HTMLInputElement | null>(null);
 	const brand = useRef<HTMLInputElement>(null);
 	const model = useRef<HTMLInputElement>(null);
 	const year = useRef<HTMLInputElement>(null);
@@ -94,7 +98,22 @@ export default function AddVehicule() {
 			alert("Erreur lors de la création de la voiture");
 		}
 	};
+	useEffect(() => {
+		console.log("🚀 ~ handleSubmit ~ license_plate:", license_plate);
+		if (!license_plate) return;
 
+		const loadCars = async () => {
+			const res = await fetch(`/api/vehicles/${license_plate}`, {
+				credentials: "include",
+			});
+			const data = await res.json();
+			console.log("🚀 ~ loadCars ~ data:", data)
+			setCar(data);
+		};
+
+		loadCars();
+		console.log(car);
+	}, [license_plate]);
 	return (
 		<div className="w-full h-[calc(100vh-64px)]  px-125 flex items-center justify-center">
 			{/* Cadre */}
