@@ -96,7 +96,7 @@ export const POST = async (
 		console.error("🚀 ~ POST ~ error:", error);
 		return new Response(
 			JSON.stringify({
-				error: "Failed to create maintenance",
+				error: "Failed to get maintenance",
 				details: error instanceof Error ? error.message : error,
 			}),
 			{

@@ -6,8 +6,10 @@ import { useEffect, useRef, useState } from "react";
 
 export default function AddVehicule() {
 	const router = useRouter();
+
 	const searchParam = useSearchParams();
 	const license_plate = searchParam.get("license_plate");
+
 	const [plate, setPlate] = useState(license_plate || "");
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
@@ -84,19 +86,29 @@ export default function AddVehicule() {
 		formData.append("color", color.current?.value || "");
 		formData.append("design", design.current?.value || "");
 		formData.append("mileage", mileage.current?.value || "");
-		formData.append("image", file);
+		if (file) formData.append("image", file);
 
-		const response = await fetch("/api/vehicles", {
-			method: "POST",
-			body: formData,
-		});
-		const data = await response.json();
-
+		let response: Response | undefined;
+		if (license_plate) {
+			response = await fetch(`/api/vehicles/${license_plate}`, {
+				method: "PUT",
+				body: formData,
+			});
+		} else {
+			response = await fetch("/api/vehicles", {
+				method: "POST",
+				body: formData,
+			});
+		}
 		if (response?.ok) {
 			router.push("/");
 		} else {
 			alert("Erreur lors de la création de la voiture");
 		}
+	};
+
+	const handleUpdate = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+		e.preventDefault();
 	};
 
 	useEffect(() => {
@@ -106,15 +118,17 @@ export default function AddVehicule() {
 			const res = await fetch(`/api/vehicles/${license_plate}`, {
 				credentials: "include",
 			});
-			const data = await res.json();
+			const data: car = await res.json();
 			console.log("🚀 ~ loadCars ~ data:", data);
-			setPlate(data.licensePlate);
+			setPlate(license_plate);
+			setPreview(data.picture_url);
 			setCar(data);
 		};
 
 		loadCars();
 		console.log(car);
 	}, [license_plate]);
+
 	return (
 		<div className="w-full h-[calc(100vh-64px)]  px-125 flex items-center justify-center">
 			{/* Cadre */}
@@ -129,7 +143,7 @@ export default function AddVehicule() {
 				</div>
 				<form
 					className="flex flex-col flex-1 text-foreground font-medium "
-					onSubmit={handleSubmit}
+					onSubmit={license_plate ? handleUpdate : handleSubmit}
 				>
 					<div className="flex w-full h-full">
 						{/* formulaire */}
@@ -163,6 +177,7 @@ export default function AddVehicule() {
 									type="text"
 									placeholder="Selectionner la marque"
 									ref={brand}
+									defaultValue={license_plate ? car?.brand || "" : undefined}
 									required
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -172,6 +187,7 @@ export default function AddVehicule() {
 									type="text"
 									required
 									ref={model}
+									defaultValue={license_plate ? car?.model || "" : undefined}
 									placeholder="Selectionner le modèle"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -181,6 +197,7 @@ export default function AddVehicule() {
 								<input
 									type="number"
 									ref={year}
+									defaultValue={license_plate ? car?.year || "" : undefined}
 									placeholder="Selectionner l'année"
 									className="border rounded px-2 py w-5/6"
 									required
@@ -191,6 +208,7 @@ export default function AddVehicule() {
 								<input
 									type="text"
 									ref={motorization}
+									defaultValue={license_plate ? car?.engine || "" : undefined}
 									placeholder="Selectionner la motorisation"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -200,6 +218,9 @@ export default function AddVehicule() {
 								<input
 									type="text"
 									ref={fuel}
+									defaultValue={
+										license_plate ? car?.fuel_type || "" : undefined
+									}
 									placeholder="Selectionner la "
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -209,6 +230,9 @@ export default function AddVehicule() {
 								<input
 									type="number"
 									ref={dinPower}
+									defaultValue={
+										license_plate ? car?.horsepower_din || "" : undefined
+									}
 									placeholder="Puissance DIN (ch)"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -217,6 +241,9 @@ export default function AddVehicule() {
 								<input
 									type="number"
 									ref={power}
+									defaultValue={
+										license_plate ? car?.fiscal_power || "" : undefined
+									}
 									placeholder="Puissance (ch)"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -226,6 +253,9 @@ export default function AddVehicule() {
 								<input
 									type="text"
 									ref={tires}
+									defaultValue={
+										license_plate ? car?.tire_size || "" : undefined
+									}
 									placeholder="Ex: 205/55 R16"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -235,6 +265,7 @@ export default function AddVehicule() {
 								<input
 									type="text"
 									ref={color}
+									defaultValue={license_plate ? car?.color || "" : undefined}
 									placeholder="Selectionner la couleur"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -244,6 +275,7 @@ export default function AddVehicule() {
 								<input
 									type="text"
 									ref={design}
+									defaultValue={license_plate ? car?.design || "" : undefined}
 									placeholder="Selectionner le Design"
 									className="border rounded px-2 py w-5/6"
 								/>
@@ -253,6 +285,7 @@ export default function AddVehicule() {
 								<input
 									type="number"
 									ref={mileage}
+									defaultValue={license_plate ? car?.mileage || "" : undefined}
 									placeholder="Kilométrage (km)"
 									className="border rounded px-2 py w-5/6"
 								/>
