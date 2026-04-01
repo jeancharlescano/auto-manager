@@ -71,8 +71,6 @@ export default function AddVehicule() {
 	const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (!file) return;
-
 		const formData = new FormData();
 		formData.append("licensePlate", plate);
 		formData.append("brand", brand.current?.value || "");
@@ -86,29 +84,25 @@ export default function AddVehicule() {
 		formData.append("color", color.current?.value || "");
 		formData.append("design", design.current?.value || "");
 		formData.append("mileage", mileage.current?.value || "");
-		if (file) formData.append("image", file);
 
+		if (file) formData.append("image", file);
 		let response: Response | undefined;
-		if (license_plate) {
-			response = await fetch(`/api/vehicles/${license_plate}`, {
-				method: "PUT",
-				body: formData,
-			});
-		} else {
-			response = await fetch("/api/vehicles", {
-				method: "POST",
-				body: formData,
-			});
-		}
+
+		license_plate
+			? (response = await fetch(`/api/vehicles/${license_plate}`, {
+					method: "PUT",
+					body: formData,
+				}))
+			: (response = await fetch("/api/vehicles", {
+					method: "POST",
+					body: formData,
+				}));
+
 		if (response?.ok) {
 			router.push("/");
 		} else {
 			alert("Erreur lors de la création de la voiture");
 		}
-	};
-
-	const handleUpdate = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-		e.preventDefault();
 	};
 
 	useEffect(() => {
@@ -143,7 +137,7 @@ export default function AddVehicule() {
 				</div>
 				<form
 					className="flex flex-col flex-1 text-foreground font-medium "
-					onSubmit={license_plate ? handleUpdate : handleSubmit}
+					onSubmit={handleSubmit}
 				>
 					<div className="flex w-full h-full">
 						{/* formulaire */}
