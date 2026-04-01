@@ -8,7 +8,7 @@ export default function AddVehicule() {
 	const router = useRouter();
 	const searchParam = useSearchParams();
 	const license_plate = searchParam.get("license_plate");
-	const [plate, setPlate] = useState("");
+	const [plate, setPlate] = useState(license_plate || "");
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [car, setCar] = useState<car | null>(null);
@@ -98,8 +98,8 @@ export default function AddVehicule() {
 			alert("Erreur lors de la création de la voiture");
 		}
 	};
+
 	useEffect(() => {
-		console.log("🚀 ~ handleSubmit ~ license_plate:", license_plate);
 		if (!license_plate) return;
 
 		const loadCars = async () => {
@@ -107,7 +107,8 @@ export default function AddVehicule() {
 				credentials: "include",
 			});
 			const data = await res.json();
-			console.log("🚀 ~ loadCars ~ data:", data)
+			console.log("🚀 ~ loadCars ~ data:", data);
+			setPlate(data.licensePlate);
 			setCar(data);
 		};
 

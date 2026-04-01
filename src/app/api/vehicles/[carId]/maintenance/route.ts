@@ -113,7 +113,6 @@ export const GET = async (
 ) => {
 	try {
 		const sessionOrResponse = await requireAuth();
-		console.log("🚀 ~ POST ~ sessionOrResponse:", sessionOrResponse);
 
 		if (sessionOrResponse instanceof Response) {
 			return sessionOrResponse;
