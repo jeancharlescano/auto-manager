@@ -57,6 +57,7 @@ export const PUT = async (request: Request) => {
 		for (let pair of formData.entries()) {
 			console.log(pair[0] + " => " + pair[1]);
 		}
+
 		let imageData = null;
 		if (formData.has("image")) {
 			const file = formData.get("image") as File;
@@ -78,7 +79,7 @@ export const PUT = async (request: Request) => {
 
 		const updateCar = await prisma.car.update({
 			where: {
-				license_plate: formData?.get("license_plate") as string,
+				license_plate: formData.get("licensePlate") as string,
 			},
 			data: {
 				user_id: Number(session.user.id),
