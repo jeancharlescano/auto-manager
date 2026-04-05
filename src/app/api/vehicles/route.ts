@@ -97,3 +97,104 @@ export const POST = async (request: Request) => {
 		);
 	}
 };
+
+export const DELETE = async (request: Request) => {
+	try {
+		const sessionOrResponse = await requireAuth();
+		if (sessionOrResponse instanceof Response) {
+			return sessionOrResponse;
+		}
+
+		const session = sessionOrResponse;
+		const body = await request.json();
+
+		for (const licensePlate of body.licensePlates) {
+			const carInvoicesFiles = await prisma.invoice.findMany({
+				where: {
+					maintenances: {
+						car_id: licensePlate,
+					},
+				},
+				select: {
+					file_url: true,
+					type: true,
+				},
+			});
+
+			for (const carInvoiceFile of carInvoicesFiles) {
+				console.log("🏭 Suppression de : " + carInvoiceFile.file_url);
+				const res = await fetch(
+					`${process.env.NEXT_PUBLIC_CDN_API_URL}/api/files`,
+					{
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${process.env.CDN_TOKEN}`,
+						},
+						body: JSON.stringify({
+							name: carInvoiceFile.file_url?.substring(
+								carInvoiceFile.file_url.lastIndexOf("/") + 1,
+							),
+							type: carInvoiceFile.type,
+						}),
+					},
+				);
+				if (!res.ok) console.log("🟥 Fichier non supprimé => " + res.status);
+				console.log("✅ Fichier supprimé");
+			}
+
+			const carImgs = await prisma.car.findMany({
+				select: {
+					picture_url: true,
+					picture_type: true,
+				},
+				where: {
+					license_plate: licensePlate,
+				},
+			});
+			for (const carImg of carImgs) {
+				console.log("🏭 Suppression de : " + carImg.picture_url);
+				const res = await fetch(
+					`${process.env.NEXT_PUBLIC_CDN_API_URL}/api/files`,
+					{
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${process.env.CDN_TOKEN}`,
+						},
+						body: JSON.stringify({
+							name: carImg.picture_url?.substring(
+								carImg.picture_url.lastIndexOf("/") + 1,
+							),
+							type: carImg.picture_type,
+						}),
+					},
+				);
+				if (!res.ok) console.log("🟥 Fichier non supprimé => " + res.status);
+				console.log("✅ Fichier supprimé");
+			}
+		}
+		console.log("🚀 ~ DELETE ~ body.licensePlates:", body.licensePlates);
+		const deletedCar = await prisma.car.deleteMany({
+			where: {
+				user_id: Number(session.user.id),
+				license_plate: {
+					in: body.licensePlates,
+				},
+			},
+		});
+		return new Response(JSON.stringify(deletedCar), {
+			status: 200,
+		});
+	} catch (error) {
+		console.error("🚀 ~ DELETE ~ error:", error);
+		return new Response(
+			JSON.stringify({
+				error: "Failed to delete car",
+				details: error instanceof Error ? error.message : error,
+			}),
+			{
+				status: 500,
+				headers: { "Content-Type": "application/json" },
+			},
+		);
+	}
+};

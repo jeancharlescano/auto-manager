@@ -41,6 +41,22 @@ export default async function CarDetail({
 			},
 		},
 	});
+	const today = new Date();
+	const maintenancesWithNextDate =
+		carData?.maintenances
+			.map((maintenance) => ({
+				title: maintenance.title,
+				nextMaintenanceDate: maintenance.next_maintenance_date,
+			}))
+			.filter(
+				(m) => m.nextMaintenanceDate && new Date(m.nextMaintenanceDate) > today,
+			)
+			.sort(
+				(a, b) =>
+					new Date(a.nextMaintenanceDate!).getTime() -
+					new Date(b.nextMaintenanceDate!).getTime(),
+			) ?? [];
+
 	if (!carData) return <>error</>;
 
 	return (
@@ -74,6 +90,38 @@ export default async function CarDetail({
 					/>
 				</div>
 				<div className="w-3/4 h-auto pl-4 ">
+					{maintenancesWithNextDate.length > 0 && (
+						<div
+							className={`h-16 w-full ${
+								maintenancesWithNextDate[0].nextMaintenanceDate!.getTime() -
+									Date.now() <=
+								1000 * 60 * 60 * 24 * 30
+									? "bg-red-500"
+									: "bg-orange-500"
+							} rounded-xl flex items-center gap-4 px-4 mb-8 transition`}
+						>
+							<Icon
+								icon="mdi:alert-circle"
+								width={36}
+								height={36}
+								color="white"
+							/>
+
+							<div className="flex flex-col w-full">
+								<span className="text-white font-bold">
+									Prochaine maintenance
+								</span>
+								<div className="w-full flex justify-between items-center">
+									<span className="text-white text-lg font-semibold">
+										{maintenancesWithNextDate[0].title}
+									</span>
+									<span className="text-white text-sm ">
+										{maintenancesWithNextDate[0].nextMaintenanceDate!.toLocaleDateString()}
+									</span>
+								</div>
+							</div>
+						</div>
+					)}
 					<Link
 						href={`/car-details/${license_plate}/add-maintenance`}
 						className="h-12 w-full bg-blue-950 rounded-xl flex items-center justify-center mb-8 cursor-pointer hover:scale-101 transition"

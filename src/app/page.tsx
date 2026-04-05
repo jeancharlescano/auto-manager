@@ -23,6 +23,34 @@ export default function Home() {
 		router.push(`/add-vehicule?edit=true&license_plate=${selectedCars[0]}`);
 	};
 
+	const handleDeleteCar = async () => {
+		if (selectedCars.length === 0) {
+			return;
+		}
+		if (
+			!confirm(
+				"Etes-vous sûr de vouloir supprimer les véhicules sélectionnés ?",
+			)
+		) {
+			return;
+		}
+
+		try {
+			const res = await fetch("/api/vehicles", {
+				method: "DELETE",
+				body: JSON.stringify({ licensePlates: selectedCars }),
+			});
+
+			if (res.ok) {
+				setCars(
+					cars.filter((car) => !selectedCars.includes(car.license_plate)),
+				);
+			}
+		} catch (error) {
+			console.error("🚀 ~ handleDeleteCar ~ error:", error);
+		}
+	};
+
 	useEffect(() => {
 		if (status !== "authenticated") return;
 
@@ -58,7 +86,7 @@ export default function Home() {
 							icon="mdi:trash-outline"
 							width={28}
 							className="text-red-500 hover:scale-95 transition-all cursor-pointer"
-							onClick={() => console.log(selectedCars)}
+							onClick={handleDeleteCar}
 						/>
 						<Icon
 							icon="mdi:close"
