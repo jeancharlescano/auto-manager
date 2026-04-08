@@ -61,10 +61,7 @@ export default async function CarDetail({
 
 	return (
 		<main className="px-124 h-full w-full">
-			<Link href="/" className="mt-4 ml-2 absolute left-0">
-				<Icon icon="left-circle-arrow" color="white" />
-			</Link>
-			<div className="w-full h-110 overflow-hidden mb-8">
+			<div className="relative w-full h-110 overflow-hidden mb-8">
 				<img
 					src={
 						carData.picture_url
@@ -74,6 +71,12 @@ export default async function CarDetail({
 					alt="car"
 					className="w-full h-full object-contain object-center bg-secBackground rounded-b"
 				/>
+				<a
+					href={`/api/vehicles/${license_plate}/carnet`}
+					className="absolute bottom-0 right-0 text-white bg-black/20 hover:bg-black/70 px-2 py-1 rounded-tl cursor-pointer"
+				>
+					carnet d'entretien
+				</a>
 			</div>
 			<div className="flex">
 				<div className="w-1/4">
