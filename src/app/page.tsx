@@ -1,5 +1,6 @@
 "use client";
 import Card from "@/components/Card";
+import { ContextMenu } from "@/components/ContextMenu";
 import { car } from "@/generated/prisma/client";
 import { Icon } from "@iconify/react";
 import { useSession } from "next-auth/react";
@@ -13,43 +14,73 @@ export default function Home() {
 	const [cars, setCars] = useState<car[]>([]);
 	const [editMode, setEditMode] = useState<boolean>(false);
 	const [selectedCars, setSelectedCars] = useState<string[]>([]);
+	const [contextMenu, setContextMenu] = useState({
+		visible: false,
+		x: 0,
+		y: 0,
+		carId: null as string | null,
+	});
+
+	const openContextMenu = (
+		e: React.MouseEvent<HTMLDivElement>,
+		carId: string,
+	) => {
+		e.preventDefault();
+		const { clientX, clientY } = e;
+		setContextMenu({ visible: true, x: clientX, y: clientY, carId });
+	};
+
+	const closeContextMenu = () => {
+		setContextMenu({ visible: false, x: 0, y: 0, carId: null });
+	};
 
 	const handleEditCarData = () => {
 		if (selectedCars.length > 1) {
 			alert("Veuillez sélectionner un seul véhicule pour l'éditer.");
 			return;
 		}
-
-		router.push(`/add-vehicule?edit=true&license_plate=${selectedCars[0]}`);
 	};
 
-	const handleDeleteCar = async () => {
-		if (selectedCars.length === 0) {
-			return;
-		}
+	const deleteCars = async (licensePlates: string[]) => {
+		if (licensePlates.length === 0) return;
+
 		if (
 			!confirm(
-				"Etes-vous sûr de vouloir supprimer les véhicules sélectionnés ?",
+				licensePlates.length > 1
+					? "Etes-vous sûr de vouloir supprimer les véhicules sélectionnés ?"
+					: "Etes-vous sûr de vouloir supprimer ce véhicule ?",
 			)
-		) {
+		)
 			return;
-		}
 
 		try {
 			const res = await fetch("/api/vehicles", {
 				method: "DELETE",
-				body: JSON.stringify({ licensePlates: selectedCars }),
+				body: JSON.stringify({ licensePlates }),
 			});
 
 			if (res.ok) {
-				setCars(
-					cars.filter((car) => !selectedCars.includes(car.license_plate)),
+				setCars((prevCars) =>
+					prevCars.filter((car) => !licensePlates.includes(car.license_plate)),
+				);
+				setSelectedCars((prevSelected) =>
+					prevSelected.filter((id) => !licensePlates.includes(id)),
 				);
 			}
 		} catch (error) {
-			console.error("🚀 ~ handleDeleteCar ~ error:", error);
+			console.error("Erreur lors de la suppression :", error);
 		}
 	};
+
+	useEffect(() => {
+		const handleClick = () => closeContextMenu();
+
+		window.addEventListener("click", handleClick);
+
+		return () => {
+			window.removeEventListener("click", handleClick);
+		};
+	}, []);
 
 	useEffect(() => {
 		if (status !== "authenticated") return;
@@ -75,24 +106,20 @@ export default function Home() {
 		<div className=" min-h-screen bg-background font-sans max-w-screen">
 			<div className="flex justify-end items-center h-16 px-2">
 				{editMode ? (
-					<div className="flex space-x-1">
-						<Icon
-							icon="mdi:edit-outline"
-							width={28}
-							className="text-blue-500 hover:scale-95 transition-all cursor-pointer"
-							onClick={handleEditCarData}
-						/>
+					<div className="flex space-x-1 items-center">
 						<Icon
 							icon="mdi:trash-outline"
 							width={28}
 							className="text-red-500 hover:scale-95 transition-all cursor-pointer"
-							onClick={handleDeleteCar}
+							onClick={() => deleteCars(selectedCars)}
 						/>
 						<Icon
 							icon="mdi:close"
-							width={28}
+							width={24}
 							className="text-foreground hover:scale-95 transition-all cursor-pointer "
-							onClick={() => setEditMode(!editMode)}
+							onClick={() =>{
+								setSelectedCars([])
+								setEditMode(!editMode)}}
 						/>
 					</div>
 				) : (
@@ -110,7 +137,8 @@ export default function Home() {
 					return (
 						<div
 							key={car.license_plate}
-							className={`relative ${selectedCars.includes(car.license_plate) ? "border-2 border-blue-500 rounded" : ""}`}
+							className={`relative ${selectedCars.includes(car.license_plate) && editMode ? "border-2 border-blue-500 rounded" : ""}`}
+							onContextMenu={(e) => openContextMenu(e, car.license_plate)}
 						>
 							<Link
 								href={`/car-details/${car.license_plate}`}
@@ -118,6 +146,32 @@ export default function Home() {
 							>
 								<Card carData={car} />
 							</Link>
+							{contextMenu.visible &&
+								contextMenu.carId === car.license_plate && (
+									<ContextMenu x={contextMenu.x} y={contextMenu.y}>
+										<button
+											onClick={() => {
+												if (!contextMenu.carId) return;
+												router.push(
+													`/add-vehicule?edit=true&license_plate=${contextMenu.carId}`,
+												);
+											}}
+											className="block w-full text-left p-2 hover:bg-gray-200"
+										>
+											✏️ Modifier
+										</button>
+										<button
+											onClick={() => {
+												if (!contextMenu.carId) return;
+												deleteCars([contextMenu.carId]);
+												closeContextMenu();
+											}}
+											className="block w-full text-left p-2 hover:bg-gray-200 text-red-500"
+										>
+											🗑 Supprimer
+										</button>
+									</ContextMenu>
+								)}
 							{editMode && (
 								<div
 									onClick={() => {
