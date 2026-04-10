@@ -3,6 +3,7 @@ import { requireAuth } from "@/lib/auth";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import archiver from "archiver";
 import JSZip from "jszip";
+import sharp from "sharp";
 
 export async function GET(
 	request: Request,
@@ -33,7 +34,7 @@ export async function GET(
 		if (!car) return new Response("Car not found", { status: 404 });
 
 		// =========================
-		// Récupération image voiture (via ZIP CDN)
+		// 📸 IMAGE VOITURE (CDN + UNZIP + CONVERSION)
 		// =========================
 		let carImageBuffer: Buffer | null = null;
 		let carImageType: "jpg" | "png" | null = null;
@@ -70,9 +71,21 @@ export async function GET(
 						const file = zip.files[fileKeys[0]];
 						carImageBuffer = await file.async("nodebuffer");
 
+						// 🔥 Conversion universelle
 						if (car.picture_type?.includes("png")) {
 							carImageType = "png";
+						} else if (
+							car.picture_type?.includes("jpeg") ||
+							car.picture_type?.includes("jpg")
+						) {
+							carImageType = "jpg";
 						} else {
+							// 👉 conversion auto (webp, gif, etc.)
+							carImageBuffer = await sharp(carImageBuffer)
+								.resize({ width: 800 }) // optimisation
+								.jpeg({ quality: 85 })
+								.toBuffer();
+
 							carImageType = "jpg";
 						}
 					}
@@ -130,9 +143,7 @@ export async function GET(
 			y -= headerSize + 8;
 		}
 
-		// =========================
-		// IMAGE CENTRÉE
-		// =========================
+		// 📸 IMAGE CENTRÉE
 		if (carImageBuffer && carImageType) {
 			try {
 				let image;
@@ -148,7 +159,7 @@ export async function GET(
 
 				page.drawImage(image, {
 					x: (width - imgWidth) / 2,
-					y: (height - imgHeight) / 2, // 💥 CENTRAGE PARFAIT
+					y: (height - imgHeight) / 2,
 					width: imgWidth,
 					height: imgHeight,
 				});
