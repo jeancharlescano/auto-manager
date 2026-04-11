@@ -90,6 +90,7 @@ export default async function CarDetail({
 						mileage={carData.mileage || 0}
 						tireSize={carData.tire_size || ""}
 						year={carData.year}
+						carId={carData.license_plate}
 					/>
 				</div>
 				<div className="w-3/4 h-auto pl-4 ">

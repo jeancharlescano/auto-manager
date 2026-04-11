@@ -8,4 +8,5 @@ interface carSpec {
 	fiscalPower: Number;
 	tireSize: String;
 	design: String;
+	carId: string;
 }

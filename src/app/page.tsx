@@ -34,13 +34,6 @@ export default function Home() {
 		setContextMenu({ visible: false, x: 0, y: 0, carId: null });
 	};
 
-	const handleEditCarData = () => {
-		if (selectedCars.length > 1) {
-			alert("Veuillez sélectionner un seul véhicule pour l'éditer.");
-			return;
-		}
-	};
-
 	const deleteCars = async (licensePlates: string[]) => {
 		if (licensePlates.length === 0) return;
 
