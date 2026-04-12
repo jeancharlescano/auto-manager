@@ -93,14 +93,14 @@ export default async function CarDetail({
 						carId={carData.license_plate}
 					/>
 				</div>
-				<div className="w-3/4 h-auto pl-4 ">
+				<div className="w-3/4 h-auto pl-4 flex flex-col">
 					{maintenancesWithNextDate.length > 0 && (
 						<div
 							className={`h-16 w-full ${
 								maintenancesWithNextDate[0].nextMaintenanceDate!.getTime() -
 									Date.now() <=
 								1000 * 60 * 60 * 24 * 30
-									? "bg-red-500"
+									? "bg-red-600"
 									: "bg-orange-500"
 							} rounded-xl flex items-center gap-4 px-4 mb-8 transition`}
 						>
@@ -112,30 +112,31 @@ export default async function CarDetail({
 							/>
 
 							<div className="flex flex-col w-full">
-								<span className="text-white font-bold">
-									Prochaine maintenance
+								<span className="text-white font-semibold">
+									Prochaine maintenance :
 								</span>
-								<div className="w-full flex justify-between items-center">
-									<span className="text-white text-lg font-semibold">
-										{maintenancesWithNextDate[0].title}
+
+								<span className="text-white text-lg">
+									{maintenancesWithNextDate[0].title}{" "}
+									<span className="text-sm underline">
+										{" "}
+										{maintenancesWithNextDate[0].nextMaintenanceDate?.toLocaleDateString()}
 									</span>
-									<span className="text-white text-sm ">
-										{maintenancesWithNextDate[0].nextMaintenanceDate!.toLocaleDateString()}
-									</span>
-								</div>
+								</span>
 							</div>
 						</div>
 					)}
 					<Link
 						href={`/car-details/${license_plate}/add-maintenance`}
-						className="h-12 w-full bg-blue-950 rounded-xl flex items-center justify-center mb-8 cursor-pointer hover:scale-101 transition"
+						className="h-6 w-fit bg-green-600 rounded flex self-end items-center justify-center mb-2 cursor-pointer hover:scale-101 transition px-2 py-1 text-white"
 					>
 						<Icon
 							icon="ic:baseline-plus"
-							width={48}
-							height={48}
+							width={24}
+							height={24}
 							color="white"
 						></Icon>
+						<p>Nouveau</p>
 					</Link>
 					<MaintenanceList
 						maintenances={JSON.parse(JSON.stringify(carData.maintenances))}
