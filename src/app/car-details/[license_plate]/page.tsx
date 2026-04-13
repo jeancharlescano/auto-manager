@@ -41,6 +41,7 @@ export default async function CarDetail({
 			},
 		},
 	});
+
 	const today = new Date();
 	const maintenancesWithNextDate =
 		carData?.maintenances
@@ -60,8 +61,9 @@ export default async function CarDetail({
 	if (!carData) return <>error</>;
 
 	return (
-		<main className="px-124 h-full w-full">
-			<div className="relative w-full h-110 overflow-hidden mb-8">
+		<main className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-96 h-full w-full">
+			{/* Image véhicule */}
+			<div className="relative w-full h-52 sm:h-72 md:h-96 lg:h-110 overflow-hidden mb-8">
 				<img
 					src={
 						carData.picture_url
@@ -71,15 +73,20 @@ export default async function CarDetail({
 					alt="car"
 					className="w-full h-full object-contain object-center bg-secBackground rounded-b"
 				/>
-				<a
+				<Link
 					href={`/api/vehicles/${license_plate}/carnet`}
-					className="absolute bottom-0 right-0 text-white bg-black/20 hover:bg-black/70 px-2 py-1 rounded-tl cursor-pointer"
+					className="absolute bottom-0 right-0 text-white bg-black/20 hover:bg-black/70 px-2 py-1 rounded-tl cursor-pointer text-sm"
 				>
 					carnet d'entretien
-				</a>
+				</Link>
 			</div>
-			<div className="flex">
-				<div className="w-1/4">
+
+
+
+			{/* Layout principal */}
+			<div className="flex flex-col md:flex-row">
+				{/* Spec */}
+				<div className="w-full md:w-1/4 mb-4 md:mb-0">
 					<Spec
 						brand={carData.brand}
 						model={carData.model}
@@ -93,49 +100,51 @@ export default async function CarDetail({
 						carId={carData.license_plate}
 					/>
 				</div>
-				<div className="w-3/4 h-auto pl-4 flex flex-col">
-					{maintenancesWithNextDate.length > 0 && (
-						<div
-							className={`h-16 w-full ${
-								maintenancesWithNextDate[0].nextMaintenanceDate!.getTime() -
-									Date.now() <=
-								1000 * 60 * 60 * 24 * 30
-									? "bg-red-600"
-									: "bg-orange-500"
-							} rounded-xl flex items-center gap-4 px-4 mb-8 transition`}
-						>
-							<Icon
-								icon="mdi:alert-circle"
-								width={36}
-								height={36}
-								color="white"
-							/>
 
-							<div className="flex flex-col w-full">
-								<span className="text-white font-semibold">
-									Prochaine maintenance :
-								</span>
-
-								<span className="text-white text-lg">
-									{maintenancesWithNextDate[0].title}{" "}
-									<span className="text-sm underline">
-										{" "}
-										{maintenancesWithNextDate[0].nextMaintenanceDate?.toLocaleDateString()}
-									</span>
-								</span>
-							</div>
-						</div>
-					)}
+				{/* Maintenances */}
+				<div className="w-full md:w-3/4 h-auto md:pl-4 flex flex-col">
+							{/* Alerte prochaine maintenance — pleine largeur */}
+			{maintenancesWithNextDate.length > 0 && (
+				<div
+					className={`w-full ${
+						maintenancesWithNextDate[0].nextMaintenanceDate!.getTime() -
+							Date.now() <=
+						1000 * 60 * 60 * 24 * 30
+							? "bg-red-700"
+							: "bg-orange-700"
+					} rounded-lg flex items-center gap-4 px-4 mb-4 transition py-2`}
+				>
+					<Icon
+						icon="mdi:alert-circle"
+						width={24}
+						height={24}
+						color="white"
+						className="shrink-0"
+					/>
+					<div className="flex items-center space-x-3 w-full">
+						<span className="text-white font-semibold">
+							Prochaine maintenance :
+						</span>
+						<span className="text-white ">
+							{maintenancesWithNextDate[0].title}{" "}
+							<span className="text-sm underline">
+								{" "}
+								{maintenancesWithNextDate[0].nextMaintenanceDate?.toLocaleDateString()}
+							</span>
+						</span>
+					</div>
+				</div>
+			)}
 					<Link
 						href={`/car-details/${license_plate}/add-maintenance`}
-						className="h-6 w-fit bg-green-600 rounded flex self-end items-center justify-center mb-2 cursor-pointer hover:scale-101 transition px-2 py-1 text-white"
+						className="h-6 w-fit bg-green-700 rounded flex self-end items-center justify-center mb-2 cursor-pointer hover:scale-101 transition px-2 py-1 text-white"
 					>
 						<Icon
 							icon="ic:baseline-plus"
 							width={24}
 							height={24}
 							color="white"
-						></Icon>
+						/>
 						<p>Nouveau</p>
 					</Link>
 					<MaintenanceList

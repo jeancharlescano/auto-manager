@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
@@ -73,152 +73,158 @@ export default function Spec({
 	};
 
 	return (
-		<div className="flex flex-col min-h-40 w-full pt-2 px-2 bg-secBackground rounded-lg shadow-2xl relative">
-			<Icon
-				icon="tabler:dots"
-				className="self-end text-gray-400 cursor-pointer "
-				width={16}
-				height={16}
-				onClick={() => {
-					setEditMode(!editMode);
-					if (!editMode) {
-						setFormData(currentData);
-					}
-				}}
-			/>
-			<div className="flex items-center space-x-4 mb-4">
-				<Icon
-					icon="mdi:engine"
-					className="text-gray-400"
-					width={32}
-					height={32}
-				/>
-				<div className="flex-1">
+		<div className="bg-secBackground rounded-2xl overflow-hidden shadow-sm relative">
+			{/* Header */}
+			<div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-black/10 dark:border-white/10">
+				<div>
+					<h2 className="font-medium text-[15px] mb-1">
+						{currentData.brand} {currentData.model}
+					</h2>
+					<span className="text-xs text-gray-400">{currentData.year}</span>
+				</div>
+				<button
+					onClick={() => {
+						setEditMode(!editMode);
+						if (!editMode) setFormData(currentData);
+					}}
+					className="w-6 h-6 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-gray-600 transition cursor-pointer"
+				>
+					<Icon icon="tabler:dots" width={14} height={14} />
+				</button>
+			</div>
+
+			{/* Specs */}
+			<div className="bg-background rounded-xl overflow-hidden m-3">
+				{/* Moteur */}
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+					<div className="flex items-center gap-2 text-gray-400">
+						<Icon icon="mdi:engine" width={15} height={15} />
+						<span className="text-xs">Moteur</span>
+					</div>
 					{editMode ? (
 						<input
 							type="text"
 							value={formData.engine}
 							onChange={(e) => handleInputChange("engine", e.target.value)}
-							className="w-full font-medium bg-transparent border-b border-gray-400"
+							className="text-[13px] font-medium text-right bg-transparent border-b border-gray-400 outline-none w-28"
 						/>
 					) : (
-						<p className="font-medium">{currentData.engine}</p>
+						<span className="text-[13px] font-medium">{currentData.engine}</span>
 					)}
 				</div>
-			</div>
-			<div className="flex items-center space-x-4 mb-4">
-				<Icon
-					icon="ix:road-filled"
-					className="text-gray-400"
-					width={32}
-					height={32}
-				/>
-				<div className="flex-1">
+
+				{/* Kilométrage */}
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+					<div className="flex items-center gap-2 text-gray-400">
+						<Icon icon="ix:road-filled" width={15} height={15} />
+						<span className="text-xs">Kilométrage</span>
+					</div>
 					{editMode ? (
 						<input
 							type="number"
 							value={formData.mileage}
 							onChange={(e) => handleInputChange("mileage", Number(e.target.value))}
-							className="w-full font-medium bg-transparent border-b border-gray-400"
+							className="text-[13px] font-medium text-right bg-transparent border-b border-gray-400 outline-none w-28"
 						/>
 					) : (
-						<p className="font-medium">{currentData.mileage.toString()} Km</p>
+						<span className="text-[13px] font-medium">{currentData.mileage} km</span>
 					)}
 				</div>
-			</div>
-			<div className="flex items-center space-x-4 mb-4">
-				<Icon
-					icon="mdi:gas-pump"
-					className="text-gray-400"
-					width={32}
-					height={32}
-				/>
-				<div className="flex-1">
+
+				{/* Carburant */}
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+					<div className="flex items-center gap-2 text-gray-400">
+						<Icon icon="mdi:gas-pump" width={15} height={15} />
+						<span className="text-xs">Carburant</span>
+					</div>
 					{editMode ? (
 						<input
 							type="text"
 							value={formData.fuelType}
 							onChange={(e) => handleInputChange("fuelType", e.target.value)}
-							className="w-full font-medium bg-transparent border-b border-gray-400"
+							className="text-[13px] font-medium text-right bg-transparent border-b border-gray-400 outline-none w-28"
 						/>
 					) : (
-						<p className="font-medium">{currentData.fuelType}</p>
+						<span className="text-[13px] font-medium">{currentData.fuelType}</span>
 					)}
 				</div>
-			</div>
-			<div className="flex items-center space-x-4 mb-4">
-				<Icon
-					icon="material-symbols:speed-outline-rounded"
-					className="text-gray-400"
-					width={32}
-					height={32}
-				/>
-				<div className="flex-1">
+
+				{/* Puissance */}
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+					<div className="flex items-center gap-2 text-gray-400">
+						<Icon icon="material-symbols:speed-outline-rounded" width={15} height={15} />
+						<span className="text-xs">Puissance</span>
+					</div>
 					{editMode ? (
 						<input
 							type="number"
 							value={formData.fiscalPower}
 							onChange={(e) => handleInputChange("fiscalPower", Number(e.target.value))}
-							className="w-full font-medium bg-transparent border-b border-gray-400"
+							className="text-[13px] font-medium text-right bg-transparent border-b border-gray-400 outline-none w-28"
 						/>
 					) : (
-						<p className="font-medium">{currentData.fiscalPower.toString()} ch</p>
+						<span className="text-[13px] font-medium">{currentData.fiscalPower} ch</span>
 					)}
 				</div>
-			</div>
-			<div className="flex items-center space-x-4 mb-4">
-				<Icon icon="ph:tire" className="text-gray-400" width={32} height={32} />
-				<div className="flex-1">
+
+				{/* Pneus */}
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+					<div className="flex items-center gap-2 text-gray-400">
+						<Icon icon="ph:tire" width={15} height={15} />
+						<span className="text-xs">Pneus</span>
+					</div>
 					{editMode ? (
 						<input
 							type="text"
 							value={formData.tireSize}
 							onChange={(e) => handleInputChange("tireSize", e.target.value)}
-							className="w-full font-medium bg-transparent border-b border-gray-400"
+							className="text-[13px] font-medium text-right bg-transparent border-b border-gray-400 outline-none w-28"
 						/>
 					) : (
-						<p className="font-medium">{currentData.tireSize}</p>
+						<span className="text-[13px] font-medium">{currentData.tireSize}</span>
 					)}
 				</div>
-			</div>
-			<div className="flex items-center space-x-4 mb-4">
-				<Icon
-					icon="mdi:paint-outline"
-					className="text-gray-400"
-					width={32}
-					height={32}
-				/>
-				<div className="flex-1">
+
+				{/* Carrosserie */}
+				<div className="flex items-center justify-between px-3 py-2.5">
+					<div className="flex items-center gap-2 text-gray-400">
+						<Icon icon="mdi:paint-outline" width={15} height={15} />
+						<span className="text-xs">Carrosserie</span>
+					</div>
 					{editMode ? (
 						<input
 							type="text"
 							value={formData.design}
 							onChange={(e) => handleInputChange("design", e.target.value)}
-							className="w-full font-medium bg-transparent border-b border-gray-400"
+							className="text-[13px] font-medium text-right bg-transparent border-b border-gray-400 outline-none w-28"
 						/>
 					) : (
-						<p className="font-medium">{currentData.design}</p>
+						<span className="text-[13px] font-medium">{currentData.design}</span>
 					)}
 				</div>
 			</div>
+
+			{/* Save button */}
 			{editMode && (
-				<div className="flex justify-center">
-					<Icon
-						icon="mdi:check"
-						className="text-green-500 cursor-pointer"
-						width={32}
-						height={32}
+				<div className="flex justify-end px-4 pb-4">
+					<button
 						onClick={handleSave}
-					/>
+						className="flex items-center gap-1.5 text-xs text-green-600 bg-background rounded-lg px-3 py-2 hover:opacity-80 transition cursor-pointer"
+					>
+						<Icon icon="mdi:check" width={14} height={14} />
+						Enregistrer
+					</button>
 				</div>
 			)}
+
+			{/* Loading overlay */}
 			{isLoading && (
-				<div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+				<div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
 					<Icon
 						icon="mdi:loading"
 						className="text-white animate-spin"
-						width={48}
-						height={48}
+						width={32}
+						height={32}
 					/>
 				</div>
 			)}

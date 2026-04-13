@@ -1,3 +1,4 @@
+"use client";
 import { Icon } from "@iconify/react";
 import { MaintenanceData } from "../types/maintenance";
 
@@ -32,73 +33,98 @@ export default function MaintenanceCard({
 	};
 
 	return (
-		<div className="h-auto rounded-lg shadow-xl p-2 mb-10 bg-secBackground">
-			<div className="w-full flex justify-end items-center mb-0.5">
-				<Icon
-					icon="bitcoin-icons:cross-filled"
-					height={18}
-					className="hover:scale-105 cursor-pointer"
+		<div className="bg-secBackground rounded-2xl overflow-hidden mb-4 shadow-sm">
+			{/* Header */}
+			<div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-black/10 dark:border-white/10">
+				<div>
+					<h2 className="font-medium text-[15px] mb-1">
+						{maintenanceData.title}
+					</h2>
+					<div className="flex items-center gap-1 text-xs text-gray-400">
+						<Icon icon="mdi:calendar-outline" width={13} height={13} />
+						{new Date(maintenanceData.maintenance_date).toLocaleDateString(
+							"fr-FR",
+							{ day: "numeric", month: "long", year: "numeric" },
+						)}
+					</div>
+				</div>
+				<button
 					onClick={() => onDelete(maintenanceData.id)}
-				></Icon>
-			</div>
-			<div className="flex items-end justify-between mb-2">
-				<h2 className="font-bold text-xl">{maintenanceData.title}</h2>
-				<div className="flex items-center space-x-0.5">
-					<Icon
-						icon="mdi:calendar"
-						width={24}
-						height={24}
-						className="text-gray-400"
-					/>
-					<p>
-						{new Date(maintenanceData.maintenance_date).toLocaleDateString()}
-					</p>
-				</div>
-			</div>
-			<div className="flex items-end justify-between mb-2">
-				<div className="flex items-center space-x-0.5">
-					<Icon
-						icon="ix:road-filled"
-						width={24}
-						height={24}
-						className="text-gray-400"
-					/>
-					<p className="font text-md">{maintenanceData.mileage_at_time} km</p>
-				</div>
-				<p>{Number(maintenanceData.total_cost)} €</p>
-			</div>
-			<ul className="px-8 overflow-auto max-h-40 mb-2 bg-background rounded">
-				{maintenanceData.maintenance_parts.map((maintenancePart) => {
-					return (
-						<li key={maintenancePart.part_id}>
-							<div className="flex w-full">
-								<p className="w-1/3">{maintenancePart.parts.name}</p>
-								<p className="w-1/3 text-center">
-									{maintenancePart.quantity} pce
-								</p>
-								<p className="w-1/3 text-right">
-									{Number(maintenancePart.unit_price)} €
-								</p>
-							</div>
-						</li>
-					);
-				})}
-			</ul>
-			<div className="w-full flex justify-end px-2">
-				<div
-					className="flex flex-col items-center cursor-pointer rounded p-0.5 shadow-sm shadow-black px-1 hover:scale-98 transition-all"
-					onClick={handleDownloadInvoices}
+					className="w-6 h-6 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-gray-600 transition text-xs cursor-pointer"
 				>
-					<Icon
-						icon="bx:file"
-						width={36}
-						height={36}
-						className="text-gray-400"
-					/>
-					<p className="text-[11px]">
-						Télécharger <br /> les factures
+					✕
+				</button>
+			</div>
+
+			{/* Body */}
+			<div className="px-4 pt-3 pb-2">
+				{/* Badges */}
+				<div className="flex flex-wrap gap-2 mb-3">
+					<div className="flex items-center gap-1.5 bg-background rounded-lg px-3 py-1.5 text-xs text-gray-400">
+						<Icon icon="ix:road-filled" width={13} height={13} />
+						<span className="font-medium">
+							{maintenanceData.mileage_at_time} km
+						</span>
+					</div>
+					{maintenanceData.next_maintenance_date && (
+						<div className="flex items-center gap-1.5 bg-background rounded-lg px-3 py-1.5 text-xs text-gray-400">
+							<Icon icon="mdi:clock-outline" width={13} height={13} />
+							<span>Prochaine révision</span>
+							<span className="font-medium text-green-600">
+								{new Date(
+									maintenanceData.next_maintenance_date,
+								).toLocaleDateString("fr-FR", {
+									day: "numeric",
+									month: "short",
+									year: "numeric",
+								})}
+							</span>
+						</div>
+					)}
+				</div>
+
+				{/* Liste des pièces */}
+				{maintenanceData.maintenance_parts.length > 0 && (
+					<div className="bg-background rounded-xl overflow-hidden mb-3">
+						{maintenanceData.maintenance_parts.map((maintenancePart, i) => (
+							<div
+								key={maintenancePart.part_id}
+								className={`flex items-center justify-between px-3 py-2 ${
+									i < maintenanceData.maintenance_parts.length - 1
+										? "border-b border-black/10 dark:border-white/10"
+										: ""
+								}`}
+							>
+								<span className="text-[13px] truncate flex-1 mr-2">
+									{maintenancePart.parts.name}
+								</span>
+								<span className="text-gray-400 text-xs mr-3 shrink-0">
+									{maintenancePart.quantity} pce
+								</span>
+								<span className="font-medium text-[13px] shrink-0">
+									{Number(maintenancePart.unit_price)} €
+								</span>
+							</div>
+						))}
+					</div>
+				)}
+			</div>
+
+			{/* Footer */}
+			<div className="flex items-center justify-between px-4 pb-4">
+				<div>
+					<p className="text-[11px] text-gray-400 mb-0.5">Total</p>
+					<p className="font-medium text-[15px]">
+						{Number(maintenanceData.total_cost)} €
 					</p>
 				</div>
+				<button
+					onClick={handleDownloadInvoices}
+					className="flex items-center gap-1.5 text-xs text-gray-400 bg-background rounded-lg px-3 py-2 hover:opacity-80 transition cursor-pointer"
+				>
+					<Icon icon="bx:file" width={14} height={14} />
+					Télécharger les factures
+				</button>
 			</div>
 		</div>
 	);
