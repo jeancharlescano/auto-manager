@@ -15,6 +15,10 @@ export default function MaintenanceList({
 		const maintenance = maintenanceData.find((m) => m.id === id);
 
 		if (!maintenance) return;
+
+		if (!confirm("Etes-vous sûr de vouloir supprimer cette maintenance ?"))
+			return;
+
 		const res = await fetch(
 			`/api/vehicles/${maintenance.car_id}/maintenance/${maintenance.id}`,
 			{ method: "DELETE" },
