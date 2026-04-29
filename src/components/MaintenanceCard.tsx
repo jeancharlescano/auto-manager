@@ -35,7 +35,7 @@ export default function MaintenanceCard({
 	return (
 		<div className="bg-secBackground rounded-2xl overflow-hidden mb-4 shadow-sm">
 			{/* Header */}
-			<div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-black/10 dark:border-white/10">
+			<div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-secBackground">
 				<div>
 					<h2 className="font-medium text-[15px] mb-1">
 						{maintenanceData.title}
@@ -91,7 +91,7 @@ export default function MaintenanceCard({
 								key={maintenancePart.part_id}
 								className={`flex items-center justify-between px-3 py-2 ${
 									i < maintenanceData.maintenance_parts.length - 1
-										? "border-b border-black/10 dark:border-white/10"
+										? "border-b border-secBackground"
 										: ""
 								}`}
 							>

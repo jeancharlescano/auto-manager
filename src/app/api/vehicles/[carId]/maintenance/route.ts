@@ -20,6 +20,9 @@ export const POST = async (
 				license_plate: carId,
 				user_id: Number(sessionOrResponse.user.id),
 			},
+			select: {
+				mileage: true,
+			},
 		});
 
 		if (!car) {
@@ -55,14 +58,19 @@ export const POST = async (
 				invoices.push(file);
 			}
 		}
+
 		const newMaintenance = await prisma.maintenance.create({
 			data: {
 				car_id: carId,
 				title: formData.get("title") as string,
 				maintenance_date: new Date(formData.get("date") as string),
-				next_maintenance_date: new Date(formData.get("nextDate") as string),
+				...(formData.get("nextDate") && {
+					next_maintenance_date: new Date(formData.get("nextDate") as string),
+				}),
 				mileage_at_time: Number(formData.get("mileage")),
-				total_cost: new Prisma.Decimal(formData.get("totalPrice") as string),
+				...(formData.get("totalPrice") && {
+					total_cost: new Prisma.Decimal(formData.get("totalPrice") as string),
+				}),
 				maintenance_parts: {
 					create: JSON.parse(formData.get("parts") as string).map(
 						(part: MaintenancePartForm) => ({
@@ -89,6 +97,20 @@ export const POST = async (
 				},
 			},
 		});
+
+		if (
+			formData.get("mileage") &&
+			Number(formData.get("mileage")) > car.mileage!
+		) {
+			await prisma.car.update({
+				where: {
+					license_plate: carId,
+				},
+				data: {
+					mileage: Number(formData.get("mileage")),
+				},
+			});
+		}
 
 		return new Response(JSON.stringify(newMaintenance), {
 			status: 201,

@@ -131,7 +131,7 @@ export default function AddVehicule() {
 				<div className="flex items-center justify-between w-full mb-8">
 					<div className="h-px bg-foreground w-1/3"></div>
 					<h2 className="text-2xl font-bold text-foreground">
-						Ajouter un véhicule
+						{license_plate ? "Modifier un véhicule" : "Ajouter un véhicule"}
 					</h2>
 					<div className="h-px bg-foreground w-1/3"></div>
 				</div>
@@ -165,7 +165,7 @@ export default function AddVehicule() {
 									value={plate}
 									required
 									maxLength={9}
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 								<input
 									type="text"
@@ -173,7 +173,7 @@ export default function AddVehicule() {
 									ref={brand}
 									defaultValue={license_plate ? car?.brand || "" : undefined}
 									required
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Modèle */}
@@ -183,7 +183,7 @@ export default function AddVehicule() {
 									ref={model}
 									defaultValue={license_plate ? car?.model || "" : undefined}
 									placeholder="Selectionner le modèle"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Année */}
@@ -193,7 +193,7 @@ export default function AddVehicule() {
 									ref={year}
 									defaultValue={license_plate ? car?.year || "" : undefined}
 									placeholder="Selectionner l'année"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 									required
 								/>
 
@@ -204,7 +204,7 @@ export default function AddVehicule() {
 									ref={motorization}
 									defaultValue={license_plate ? car?.engine || "" : undefined}
 									placeholder="Selectionner la motorisation"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Carburant */}
@@ -216,7 +216,7 @@ export default function AddVehicule() {
 										license_plate ? car?.fuel_type || "" : undefined
 									}
 									placeholder="Selectionner la "
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Puissance DIN*/}
@@ -228,7 +228,7 @@ export default function AddVehicule() {
 										license_plate ? car?.horsepower_din || "" : undefined
 									}
 									placeholder="Puissance DIN (ch)"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 								{/* Puissance */}
 
@@ -239,7 +239,7 @@ export default function AddVehicule() {
 										license_plate ? car?.fiscal_power || "" : undefined
 									}
 									placeholder="Puissance (ch)"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Taille des pneus */}
@@ -251,7 +251,7 @@ export default function AddVehicule() {
 										license_plate ? car?.tire_size || "" : undefined
 									}
 									placeholder="Ex: 205/55 R16"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Couleur */}
@@ -261,7 +261,7 @@ export default function AddVehicule() {
 									ref={color}
 									defaultValue={license_plate ? car?.color || "" : undefined}
 									placeholder="Selectionner la couleur"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Design */}
@@ -271,7 +271,7 @@ export default function AddVehicule() {
 									ref={design}
 									defaultValue={license_plate ? car?.design || "" : undefined}
 									placeholder="Selectionner le Design"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 
 								{/* Kilométrage */}
@@ -281,7 +281,7 @@ export default function AddVehicule() {
 									ref={mileage}
 									defaultValue={license_plate ? car?.mileage || "" : undefined}
 									placeholder="Kilométrage (km)"
-									className="border rounded px-2 py w-5/6"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
 								/>
 							</aside>
 						</aside>
@@ -292,7 +292,7 @@ export default function AddVehicule() {
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={handleDrop}
 								onClick={() => inputRef.current?.click()}
-								className="w-full border border-dashed hover:bg-background h-full flex justify-center items-center rounded cursor-pointer"
+								className="w-full bg-secBackground border border-dashed border-gray-300 hover:bg-background h-full flex justify-center items-center rounded-lg cursor-pointer shadow-sm"
 							>
 								{preview ? (
 									<>
@@ -330,7 +330,7 @@ export default function AddVehicule() {
 					</div>
 					<button
 						type="submit"
-						className="mt-8 w-1/2 py-1 self-center rounded text-white bg-blue-950 font-bold cursor-pointer"
+						className="mt-8 w-1/2 py-3 self-center rounded-lg text-white bg-blue-950 hover:bg-blue-800 transition-colors font-bold cursor-pointer shadow-md"
 					>
 						Valider
 					</button>

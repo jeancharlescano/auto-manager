@@ -75,7 +75,7 @@ export default function Spec({
 	return (
 		<div className="bg-secBackground rounded-2xl overflow-hidden shadow-sm relative">
 			{/* Header */}
-			<div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-black/10 dark:border-white/10">
+			<div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-secBackground">
 				<div>
 					<h2 className="font-medium text-[15px] mb-1">
 						{currentData.brand} {currentData.model}
@@ -87,7 +87,7 @@ export default function Spec({
 						setEditMode(!editMode);
 						if (!editMode) setFormData(currentData);
 					}}
-					className="w-6 h-6 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-gray-600 transition cursor-pointer"
+					className="w-6 h-6 rounded-full bg-secBackground flex items-center justify-center text-gray-400 hover:text-gray-600 transition cursor-pointer"
 				>
 					<Icon icon="tabler:dots" width={14} height={14} />
 				</button>
@@ -96,7 +96,7 @@ export default function Spec({
 			{/* Specs */}
 			<div className="bg-background rounded-xl overflow-hidden m-3">
 				{/* Moteur */}
-				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-secBackground">
 					<div className="flex items-center gap-2 text-gray-400">
 						<Icon icon="mdi:engine" width={15} height={15} />
 						<span className="text-xs">Moteur</span>
@@ -114,7 +114,7 @@ export default function Spec({
 				</div>
 
 				{/* Kilométrage */}
-				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-secBackground">
 					<div className="flex items-center gap-2 text-gray-400">
 						<Icon icon="ix:road-filled" width={15} height={15} />
 						<span className="text-xs">Kilométrage</span>
@@ -132,7 +132,7 @@ export default function Spec({
 				</div>
 
 				{/* Carburant */}
-				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-secBackground">
 					<div className="flex items-center gap-2 text-gray-400">
 						<Icon icon="mdi:gas-pump" width={15} height={15} />
 						<span className="text-xs">Carburant</span>
@@ -150,7 +150,7 @@ export default function Spec({
 				</div>
 
 				{/* Puissance */}
-				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-secBackground">
 					<div className="flex items-center gap-2 text-gray-400">
 						<Icon icon="material-symbols:speed-outline-rounded" width={15} height={15} />
 						<span className="text-xs">Puissance</span>
@@ -168,7 +168,7 @@ export default function Spec({
 				</div>
 
 				{/* Pneus */}
-				<div className="flex items-center justify-between px-3 py-2.5 border-b border-black/10 dark:border-white/10">
+				<div className="flex items-center justify-between px-3 py-2.5 border-b border-secBackground">
 					<div className="flex items-center gap-2 text-gray-400">
 						<Icon icon="ph:tire" width={15} height={15} />
 						<span className="text-xs">Pneus</span>

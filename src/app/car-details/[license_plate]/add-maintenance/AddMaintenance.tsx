@@ -104,7 +104,7 @@ export default function AddMaintenancee({
 
 	return (
 		<div className="w-full min-h-[calc(100vh-64px)] px-4 sm:px-8 md:px-12 py-6 flex items-start lg:items-center justify-center">
-			<div className="w-full max-w-5xl bg-secBackground rounded p-4 sm:p-6 shadow-2xl flex flex-col">
+			<div className="w-full max-w-5xl bg-secBackground rounded p-4 sm:p-6 shadow-lg flex flex-col">
 
 				<div className="flex items-center justify-between w-full mb-6 sm:mb-8 gap-2">
 					<div className="h-px bg-background flex-1" />
@@ -116,73 +116,83 @@ export default function AddMaintenancee({
 
 				<form
 					onSubmit={handleSubmit}
-					className="flex flex-1 flex-col text-foreground font-medium"
+					className="flex flex-1 flex-col text-foreground font-medium space-y-4"
 				>
-					<div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 mb-4">
-						<label className="sm:w-1/4 font-semibold text-sm sm:text-base">
-							Titre de la Maintenance :
-						</label>
-						<input
-							className="sm:w-3/4 border px-2 py-1 rounded"
-							placeholder="Ex: Révision"
-							ref={title}
-							type="text"
-						/>
+					{/* Titre */}
+					<div className="bg-secBackground rounded-lg shadow-sm p-4">
+						<div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
+							<label className="sm:w-1/4 font-semibold text-sm sm:text-base">
+								Titre de la Maintenance :
+							</label>
+							<input
+								className="sm:w-3/4 border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py-1 bg-transparent"
+								placeholder="Ex: Révision"
+								ref={title}
+								type="text"
+							/>
+						</div>
 					</div>
 
-					<div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-0 mb-4">
-						<label className="sm:w-1/4 font-semibold text-sm sm:text-base pt-1">
-							Date :
-						</label>
-						<div className="sm:w-3/4 flex flex-col xs:flex-row flex-wrap gap-2">
-							<div className="flex items-center border rounded px-2 gap-2 flex-1 min-w-0">
-								<Icon icon="mdi:calendar" className="text-xl shrink-0" />
-								<input
-									type="date"
-									ref={date}
-									className="w-full outline-none text-sm"
-								/>
-							</div>
-							<div className="flex items-center border rounded px-2 gap-2 flex-1 min-w-0">
-								<Icon icon="material-symbols:speed-outline-rounded" className="text-xl shrink-0" />
-								<input
-									type="number"
-									ref={mileage}
-									placeholder="Kilométrage"
-									className="w-full outline-none text-sm"
-								/>
-							</div>
-							<div className="flex items-center border rounded px-2 gap-2 flex-1 min-w-0">
-								<Icon icon="material-symbols:euro" className="text-xl shrink-0" />
-								<input
-									type="number"
-									ref={totalPrice}
-									placeholder="Coût total"
-									className="w-full outline-none text-sm"
-								/>
+					{/* Date et infos */}
+					<div className="bg-secBackground rounded-lg shadow-sm p-4">
+						<div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-0">
+							<label className="sm:w-1/4 font-semibold text-sm sm:text-base pt-1">
+								Date :
+							</label>
+							<div className="sm:w-3/4 flex flex-col xs:flex-row flex-wrap gap-2">
+								<div className="flex items-center border-b-2 border-gray-300 px-2 gap-2 flex-1 min-w-0 bg-transparent">
+									<Icon icon="mdi:calendar" className="text-xl shrink-0" />
+									<input
+										type="date"
+										ref={date}
+										className="w-full outline-none text-sm bg-transparent"
+									/>
+								</div>
+								<div className="flex items-center border-b-2 border-gray-300 px-2 gap-2 flex-1 min-w-0 bg-transparent">
+									<Icon icon="material-symbols:speed-outline-rounded" className="text-xl shrink-0" />
+									<input
+										type="number"
+										ref={mileage}
+										placeholder="Kilométrage"
+										className="w-full outline-none text-sm bg-transparent"
+									/>
+								</div>
+								<div className="flex items-center border-b-2 border-gray-300 px-2 gap-2 flex-1 min-w-0 bg-transparent">
+									<Icon icon="material-symbols:euro" className="text-xl shrink-0" />
+									<input
+										type="number"
+										ref={totalPrice}
+										placeholder="Coût total"
+										className="w-full outline-none text-sm bg-transparent"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 mb-4">
-						<label className="sm:w-1/4 font-semibold text-sm sm:text-base">
-							Date prochaine maintenance :
-						</label>
-						<div className="sm:w-3/4 flex">
-							<div className="flex items-center border rounded px-2 gap-2 flex-1 sm:max-w-xs">
-								<Icon icon="mdi:calendar" className="text-xl shrink-0" />
-								<input
-									type="date"
-									ref={nextDate}
-									className="w-full outline-none text-sm"
-								/>
+					{/* Date prochaine maintenance */}
+					<div className="bg-secBackground rounded-lg shadow-sm p-4">
+						<div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
+							<label className="sm:w-1/4 font-semibold text-sm sm:text-base">
+								Date prochaine maintenance :
+							</label>
+							<div className="sm:w-3/4 flex">
+								<div className="flex items-center border-b-2 border-gray-300 px-2 gap-2 flex-1 sm:max-w-xs bg-transparent">
+									<Icon icon="mdi:calendar" className="text-xl shrink-0" />
+									<input
+										type="date"
+										ref={nextDate}
+										className="w-full outline-none text-sm bg-transparent"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
 
 					<div className="flex flex-col lg:flex-row gap-4 lg:gap-0">
 
-						<div className="shadow-2xl rounded px-4 py-2 flex flex-col lg:flex-4">
+						{/* Pièces */}
+						<div className="shadow-md rounded-lg px-4 py-2 flex flex-col lg:flex-4 bg-secBackground">
 							<div className="flex items-center mb-2">
 								<h3 className="text-base sm:text-xl font-semibold text-foreground whitespace-nowrap pr-3">
 									Pièces Changées
@@ -202,7 +212,7 @@ export default function AddMaintenancee({
 											placeholder="Nom de la pièce"
 											value={piece.name}
 											onChange={(e) => updatePiece(index, "name", e.target.value)}
-											className="flex-1 min-w-0 outline-none border border-secBackground rounded px-2 text-sm"
+											className="flex-1 min-w-0 outline-none border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors rounded px-2 text-sm bg-transparent"
 										/>
 										<datalist id="partsList">
 											{partList.map((part) => (
@@ -216,7 +226,7 @@ export default function AddMaintenancee({
 												min="1"
 												value={piece.quantity}
 												onChange={(e) => updatePiece(index, "quantity", Number(e.target.value))}
-												className="w-14 border border-secBackground rounded px-2 text-sm"
+												className="w-14 border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors rounded px-2 text-sm bg-transparent"
 											/>
 											<span className="text-sm">Qte</span>
 										</div>
@@ -227,7 +237,7 @@ export default function AddMaintenancee({
 												min="1"
 												value={piece.price}
 												onChange={(e) => updatePiece(index, "price", Number(e.target.value))}
-												className="w-14 border border-secBackground rounded px-2 text-sm"
+												className="w-14 border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors rounded px-2 text-sm bg-transparent"
 											/>
 											<span className="text-sm">€</span>
 										</div>
@@ -245,7 +255,7 @@ export default function AddMaintenancee({
 							<button
 								type="button"
 								onClick={addPiece}
-								className="flex items-center gap-2 mt-4 bg-blue-950 text-white px-2 py-1 rounded-lg w-full sm:w-48 text-sm justify-center sm:justify-start"
+								className="flex items-center gap-2 mt-4 bg-blue-950 hover:bg-blue-800 transition-colors text-white px-2 py-1 rounded-lg w-full sm:w-48 text-sm justify-center sm:justify-start"
 							>
 								<Icon icon="mdi:plus" />
 								Ajouter une pièce
@@ -257,7 +267,7 @@ export default function AddMaintenancee({
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={handleDrop}
 								onClick={() => inputRef.current?.click()}
-								className="border rounded border-dashed w-full border-foreground hover:bg-background flex flex-col items-center justify-center cursor-pointer p-4 min-h-40 lg:min-h-0"
+								className="bg-secBackground border rounded-lg border-dashed w-full border-gray-300 hover:bg-background shadow-sm flex flex-col items-center justify-center cursor-pointer p-4 min-h-40 lg:min-h-0"
 							>
 								{files.length > 0 ? (
 									<div className="flex flex-col gap-2 w-full">
@@ -304,7 +314,7 @@ export default function AddMaintenancee({
 
 					<button
 						type="submit"
-						className="mt-6 sm:mt-8 w-full sm:w-1/2 py-2 self-center rounded text-white bg-blue-950 font-bold cursor-pointer text-sm sm:text-base"
+						className="mt-6 sm:mt-8 w-full sm:w-1/2 py-3 self-center rounded-lg text-white bg-blue-950 hover:bg-blue-800 transition-colors font-bold cursor-pointer text-sm sm:text-base shadow-md"
 					>
 						Valider
 					</button>

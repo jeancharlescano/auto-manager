@@ -21,9 +21,9 @@
 }
 
 [data-theme="light"] {
-	--background: #ececec;
-	--foreground: #171717;
-	--secBackground: #F8F7FC;
+	--background: #f5f5f5;
+	--foreground: #333333;
+	--secBackground: #ffffff;
 }
 
 body {

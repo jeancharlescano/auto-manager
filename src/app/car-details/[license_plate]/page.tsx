@@ -81,8 +81,6 @@ export default async function CarDetail({
 				</Link>
 			</div>
 
-
-
 			{/* Layout principal */}
 			<div className="flex flex-col md:flex-row">
 				{/* Spec */}
@@ -103,50 +101,51 @@ export default async function CarDetail({
 
 				{/* Maintenances */}
 				<div className="w-full md:w-3/4 h-auto md:pl-4 flex flex-col">
-							{/* Alerte prochaine maintenance — pleine largeur */}
-			{maintenancesWithNextDate.length > 0 && (
-				<div
-					className={`w-full ${
-						maintenancesWithNextDate[0].nextMaintenanceDate!.getTime() -
-							Date.now() <=
-						1000 * 60 * 60 * 24 * 30
-							? "bg-red-700"
-							: "bg-orange-700"
-					} rounded-lg flex items-center gap-4 px-4 mb-4 transition py-2`}
-				>
-					<Icon
-						icon="mdi:alert-circle"
-						width={24}
-						height={24}
-						color="white"
-						className="shrink-0"
-					/>
-					<div className="flex items-center space-x-3 w-full">
-						<span className="text-white font-semibold">
-							Prochaine maintenance :
-						</span>
-						<span className="text-white ">
-							{maintenancesWithNextDate[0].title}{" "}
-							<span className="text-sm underline">
-								{" "}
-								{maintenancesWithNextDate[0].nextMaintenanceDate?.toLocaleDateString()}
-							</span>
-						</span>
+					<div className="flex justify-between mb-2 w-full">
+						{maintenancesWithNextDate.length > 0 && (
+							<div
+								className={` ${
+									maintenancesWithNextDate[0].nextMaintenanceDate!.getTime() -
+										Date.now() <=
+									1000 * 60 * 60 * 24 * 30
+										? "bg-red-700"
+										: "bg-orange-700"
+								} rounded-lg flex items-center gap-4 px-2  transition py-1`}
+							>
+								<Icon
+									icon="mdi:alert-circle"
+									width={24}
+									height={24}
+									color="white"
+									className="shrink-0"
+								/>
+								<div className="flex items-center space-x-3 w-full text-sm">
+									<span className="text-white font-semibold">
+										Prochaine maintenance :
+									</span>
+									<span className="text-white ">
+										{maintenancesWithNextDate[0].title}{" "}
+										<span className="text-sm underline">
+											{" "}
+											{maintenancesWithNextDate[0].nextMaintenanceDate?.toLocaleDateString()}
+										</span>
+									</span>
+								</div>
+							</div>
+						)}
+						<Link
+							href={`/car-details/${license_plate}/add-maintenance`}
+							className="h-6 w-fit bg-green-700 rounded flex self-end items-center justify-center  cursor-pointer hover:scale-101 transition px-2 py-1 text-white"
+						>
+							<Icon
+								icon="ic:baseline-plus"
+								width={24}
+								height={24}
+								color="white"
+							/>
+							<p>Nouveau</p>
+						</Link>
 					</div>
-				</div>
-			)}
-					<Link
-						href={`/car-details/${license_plate}/add-maintenance`}
-						className="h-6 w-fit bg-green-700 rounded flex self-end items-center justify-center mb-2 cursor-pointer hover:scale-101 transition px-2 py-1 text-white"
-					>
-						<Icon
-							icon="ic:baseline-plus"
-							width={24}
-							height={24}
-							color="white"
-						/>
-						<p>Nouveau</p>
-					</Link>
 					<MaintenanceList
 						maintenances={JSON.parse(JSON.stringify(carData.maintenances))}
 					/>
