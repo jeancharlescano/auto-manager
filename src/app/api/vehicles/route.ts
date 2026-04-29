@@ -1,7 +1,7 @@
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export const GET = async (_request: Request) => {
+export const GET = async () => {
 	try {
 		const sessionOrResponse = await requireAuth();
 		if (sessionOrResponse instanceof Response) {
@@ -10,19 +10,46 @@ export const GET = async (_request: Request) => {
 
 		const session = sessionOrResponse;
 
+		const currentDate = new Date();
+		const today = new Date(
+			Date.UTC(
+				currentDate.getFullYear(),
+				currentDate.getMonth(),
+				currentDate.getDate(),
+			),
+		);
+
 		const cars = await prisma.car.findMany({
 			where: { user_id: Number(session.user.id) },
+			include: {
+				maintenances: {
+					where: {
+						next_maintenance_date: {
+							gte: today,
+						},
+					},
+					orderBy: {
+						next_maintenance_date: "asc",
+					},
+					take: 1,
+					select: {
+						id: true,
+						title: true,
+						next_maintenance_date: true,
+					},
+				},
+			},
 		});
 
 		return new Response(JSON.stringify(cars), {
 			status: 200,
-			headers: { "Content-type": "application.json" },
+			headers: { "Content-Type": "application/json" },
 		});
 	} catch (error) {
 		console.log("🚀 ~ GET ~ error:", error);
 		return new Response(
 			JSON.stringify({
-				error: "Failed to create car",
+				error: "Failed to load cars",
 				details: error instanceof Error ? error.message : error,
 			}),
 			{

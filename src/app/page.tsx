@@ -1,7 +1,7 @@
 "use client";
 import Card from "@/components/Card";
 import { ContextMenu } from "@/components/ContextMenu";
-import { car } from "@/generated/prisma/client";
+import type { CarWithNextMaintenance } from "@/types/car";
 import { Icon } from "@iconify/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
 	const router = useRouter();
 	const { status } = useSession();
-	const [cars, setCars] = useState<car[]>([]);
+	const [cars, setCars] = useState<CarWithNextMaintenance[]>([]);
 	const [editMode, setEditMode] = useState<boolean>(false);
 	const [selectedCars, setSelectedCars] = useState<string[]>([]);
 	const [contextMenu, setContextMenu] = useState({
@@ -80,7 +80,7 @@ export default function Home() {
 
 		const loadCars = async () => {
 			const res = await fetch("/api/vehicles", { credentials: "include" });
-			const data = await res.json();
+			const data: CarWithNextMaintenance[] = await res.json();
 			setCars(data);
 		};
 

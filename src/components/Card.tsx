@@ -1,6 +1,15 @@
 import carImg from "@/assets/a5.jpg";
-import { car } from "@/generated/prisma/client";
-export default function Card({ carData }: { carData: car }) {
+import type { CarWithNextMaintenance } from "@/types/car";
+
+export default function Card({ carData }: { carData: CarWithNextMaintenance }) {
+	const nextMaintenance = carData.maintenances[0];
+	const nextMaintenanceDate = nextMaintenance?.next_maintenance_date
+		? new Date(nextMaintenance.next_maintenance_date)
+		: null;
+	const nextMaintenanceLabel = nextMaintenanceDate
+		? `Prochaine maintenance: ${nextMaintenanceDate.toLocaleDateString("fr-FR")}`
+		: "Aucune maintenance planifiée";
+
 	return (
 		<div className="h-72 rounded w-full shadow-xl bg-secBackground overflow-hidden cursor-pointer transition hover:scale-[102%]">
 			<div className="h-2/3 overflow-hidden relative">
@@ -10,6 +19,7 @@ export default function Card({ carData }: { carData: car }) {
 							? `${process.env.NEXT_PUBLIC_CDN_API_URL}${carData.picture_url}`
 							: carImg.src
 					}
+					alt={`${carData.brand} ${carData.model}`}
 					className="w-full h-full object-cover object-center"
 				/>
 			</div>
@@ -22,8 +32,11 @@ export default function Card({ carData }: { carData: car }) {
 						{carData.year} - {carData.engine}
 					</p>
 				</div>
-				<p className="text-foreground/60 text-xs ">
-					📄 Prochaine maintenance: 10/03/2026
+				<p
+					className="text-foreground/60 text-xs truncate"
+					title={nextMaintenanceLabel}
+				>
+					{nextMaintenanceLabel}
 				</p>
 			</div>
 		</div>
