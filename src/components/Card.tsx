@@ -1,4 +1,6 @@
-import carImg from "@/assets/a5.jpg";
+"use client";
+
+import carImg from "@/assets/car.png";
 import type { CarWithNextMaintenance } from "@/types/car";
 
 export default function Card({ carData }: { carData: CarWithNextMaintenance }) {
@@ -19,6 +21,11 @@ export default function Card({ carData }: { carData: CarWithNextMaintenance }) {
 							? `${process.env.NEXT_PUBLIC_CDN_API_URL}${carData.picture_url}`
 							: carImg.src
 					}
+					onError={(event) => {
+						if (event.currentTarget.src !== carImg.src) {
+							event.currentTarget.src = carImg.src;
+						}
+					}}
 					alt={`${carData.brand} ${carData.model}`}
 					className="w-full h-full object-cover object-center"
 				/>

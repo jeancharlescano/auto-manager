@@ -1,10 +1,11 @@
-import carImg from "@/assets/a5.jpg";
+import carImg from "@/assets/car.png";
 import Link from "next/link";
 import Spec from "@/components/Spec";
 import { Icon } from "@iconify/react";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import MaintenanceList from "@/components/MaintenanceList";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 export default async function CarDetail({
 	params,
@@ -60,16 +61,17 @@ export default async function CarDetail({
 
 	if (!carData) return <>error</>;
 
+	const carPictureSrc = carData.picture_url
+		? `${process.env.NEXT_PUBLIC_CDN_API_URL}${carData.picture_url}`
+		: carImg.src;
+
 	return (
 		<main className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-96 h-full w-full">
 			{/* Image véhicule */}
-			<div className="relative w-full h-52 sm:h-72 md:h-96 lg:h-110 overflow-hidden mb-8">
-				<img
-					src={
-						carData.picture_url
-							? `${process.env.NEXT_PUBLIC_CDN_API_URL}${carData.picture_url}`
-							: carImg.src
-					}
+			<div className="relative w-full h-52 sm:h-72 md:h-96 lg:h-110 overflow-hidden mb-8 bg-secBackground">
+				<ImageWithFallback
+					src={carPictureSrc}
+					fallbackSrc={carImg.src}
 					alt="car"
 					className="w-full h-full object-contain object-center bg-secBackground rounded-b"
 				/>
@@ -77,7 +79,7 @@ export default async function CarDetail({
 					href={`/api/vehicles/${license_plate}/carnet`}
 					className="absolute bottom-0 right-0 text-white bg-black/20 hover:bg-black/70 px-2 py-1 rounded-tl cursor-pointer text-sm"
 				>
-					carnet d'entretien
+					carnet d&apos;entretien
 				</Link>
 			</div>
 
@@ -106,7 +108,7 @@ export default async function CarDetail({
 							<div
 								className={` ${
 									maintenancesWithNextDate[0].nextMaintenanceDate!.getTime() -
-										Date.now() <=
+										today.getTime() <=
 									1000 * 60 * 60 * 24 * 30
 										? "bg-red-700"
 										: "bg-orange-700"
