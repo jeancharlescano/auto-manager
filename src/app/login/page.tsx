@@ -21,6 +21,11 @@ export default function Login() {
 
 	const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (!email.current?.value || !password.current?.value) {
+			alert("Champs non renseignés");
+			return;
+		}
+
 
 		const res = await signIn("credentials", {
 			email: email.current?.value,
@@ -28,7 +33,6 @@ export default function Login() {
 			redirect: false,
 		});
 
-		console.log(res);
 
 		if (res?.ok) {
 			router.push("/");

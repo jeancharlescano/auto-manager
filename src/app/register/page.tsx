@@ -31,6 +31,11 @@ export default function Register() {
 			return;
 		}
 		
+		if (password.current.value !== confirmPassword.current?.value) {
+			alert("Les mots de passe ne correspondent pas");
+			return
+		}
+
 		const result = await fetch("/api/auth/signup", {
 			method: "POST",
 			headers: {
