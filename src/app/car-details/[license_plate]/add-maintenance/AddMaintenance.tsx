@@ -137,7 +137,7 @@ export default function AddMaintenancee({
 					<div className="bg-secBackground rounded-lg shadow-sm p-4">
 						<div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-0">
 							<label className="sm:w-1/4 font-semibold text-sm sm:text-base pt-1">
-								Date :
+								Informations :
 							</label>
 							<div className="sm:w-3/4 flex flex-col xs:flex-row flex-wrap gap-2">
 								<div className="flex items-center border-b-2 border-gray-300 px-2 gap-2 flex-1 min-w-0 bg-transparent">
@@ -314,7 +314,7 @@ export default function AddMaintenancee({
 
 					<button
 						type="submit"
-						className="mt-6 sm:mt-8 w-full sm:w-1/2 py-3 self-center rounded-lg text-white bg-blue-950 hover:bg-blue-800 transition-colors font-bold cursor-pointer text-sm sm:text-base shadow-md"
+						className="mt-4 w-full sm:w-1/2 py-2 self-center rounded-lg text-white bg-blue-950 hover:bg-blue-800 transition-colors font-bold cursor-pointer text-sm sm:text-base shadow-md"
 					>
 						Valider
 					</button>

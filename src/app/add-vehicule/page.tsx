@@ -143,18 +143,18 @@ export default function AddVehicule() {
 						{/* formulaire */}
 						<aside className="w-1/2 flex border-r">
 							<aside className="w-1/2 flex flex-col justify-between items-start ">
-								<label className="text-foreground">Immatriculation :</label>
-								<label className="text-foreground">Marque :</label>
-								<label className="text-foreground">Modèle :</label>
-								<label className="text-foreground">Année :</label>
-								<label className="text-foreground">Motorisation :</label>
-								<label className="text-foreground">Carburant :</label>
-								<label className="text-foreground">Puissance (DIN):</label>
-								<label className="text-foreground">Puissance (Fiscaux):</label>
-								<label className="text-foreground">Taille des pneus :</label>
-								<label className="text-foreground">Couleur :</label>
-								<label className="text-foreground">Design :</label>
-								<label className="text-foreground">Kilométrage :</label>
+								<label className="text-foreground font-semibold">Immatriculation :</label>
+								<label className="text-foreground font-semibold">Marque :</label>
+								<label className="text-foreground font-semibold">Modèle :</label>
+								<label className="text-foreground font-semibold">Année :</label>
+								<label className="text-foreground font-semibold">Motorisation :</label>
+								<label className="text-foreground font-semibold">Carburant :</label>
+								<label className="text-foreground font-semibold">Puissance (DIN):</label>
+								<label className="text-foreground font-semibold">Puissance (Fiscaux):</label>
+								<label className="text-foreground font-semibold">Taille des pneus :</label>
+								<label className="text-foreground font-semibold">Couleur :</label>
+								<label className="text-foreground font-semibold">Design :</label>
+								<label className="text-foreground font-semibold">Kilométrage :</label>
 							</aside>
 							<aside className="w-1/2 flex flex-col justify-between items-start ">
 								{/* Marque */}
@@ -165,7 +165,7 @@ export default function AddVehicule() {
 									value={plate}
 									required
 									maxLength={9}
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 								<input
 									type="text"
@@ -173,7 +173,7 @@ export default function AddVehicule() {
 									ref={brand}
 									defaultValue={license_plate ? car?.brand || "" : undefined}
 									required
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Modèle */}
@@ -183,7 +183,7 @@ export default function AddVehicule() {
 									ref={model}
 									defaultValue={license_plate ? car?.model || "" : undefined}
 									placeholder="Selectionner le modèle"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Année */}
@@ -193,7 +193,7 @@ export default function AddVehicule() {
 									ref={year}
 									defaultValue={license_plate ? car?.year || "" : undefined}
 									placeholder="Selectionner l'année"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 									required
 								/>
 
@@ -204,7 +204,7 @@ export default function AddVehicule() {
 									ref={motorization}
 									defaultValue={license_plate ? car?.engine || "" : undefined}
 									placeholder="Selectionner la motorisation"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Carburant */}
@@ -216,7 +216,7 @@ export default function AddVehicule() {
 										license_plate ? car?.fuel_type || "" : undefined
 									}
 									placeholder="Selectionner la "
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Puissance DIN*/}
@@ -228,7 +228,7 @@ export default function AddVehicule() {
 										license_plate ? car?.horsepower_din || "" : undefined
 									}
 									placeholder="Puissance DIN (ch)"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 								{/* Puissance */}
 
@@ -239,7 +239,7 @@ export default function AddVehicule() {
 										license_plate ? car?.fiscal_power || "" : undefined
 									}
 									placeholder="Puissance (ch)"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Taille des pneus */}
@@ -251,7 +251,7 @@ export default function AddVehicule() {
 										license_plate ? car?.tire_size || "" : undefined
 									}
 									placeholder="Ex: 205/55 R16"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Couleur */}
@@ -261,7 +261,7 @@ export default function AddVehicule() {
 									ref={color}
 									defaultValue={license_plate ? car?.color || "" : undefined}
 									placeholder="Selectionner la couleur"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Design */}
@@ -271,7 +271,7 @@ export default function AddVehicule() {
 									ref={design}
 									defaultValue={license_plate ? car?.design || "" : undefined}
 									placeholder="Selectionner le Design"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 
 								{/* Kilométrage */}
@@ -281,7 +281,7 @@ export default function AddVehicule() {
 									ref={mileage}
 									defaultValue={license_plate ? car?.mileage || "" : undefined}
 									placeholder="Kilométrage (km)"
-									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent"
+									className="border-0 border-b-2 border-gray-300 focus:border-blue-500 transition-colors px-2 py w-5/6 bg-transparent outline-none"
 								/>
 							</aside>
 						</aside>
@@ -330,7 +330,7 @@ export default function AddVehicule() {
 					</div>
 					<button
 						type="submit"
-						className="mt-8 w-1/2 py-3 self-center rounded-lg text-white bg-blue-950 hover:bg-blue-800 transition-colors font-bold cursor-pointer shadow-md"
+						className="mt-4 w-1/2 py-2 self-center rounded-lg text-white bg-blue-950 hover:bg-blue-800 transition-colors font-bold cursor-pointer shadow-md"
 					>
 						Valider
 					</button>
